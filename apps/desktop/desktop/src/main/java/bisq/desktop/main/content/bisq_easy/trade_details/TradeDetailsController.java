@@ -22,6 +22,8 @@ import bisq.desktop.common.view.Controller;
 import bisq.desktop.common.view.TabController;
 import bisq.bisq_easy.NavigationTarget;
 import bisq.desktop.ServiceProvider;
+import bisq.desktop.overlay.OverlayController;
+import bisq.user.identity.UserIdentityService;
 
 import java.util.Optional;
 
@@ -32,11 +34,13 @@ public class TradeDetailsController extends TabController<TradeDetailsModel> {
     @Getter
     private final TradeDetailsView view;
     private final ServiceProvider serviceProvider;
+    protected final UserIdentityService userIdentityService;
 
     public TradeDetailsController(ServiceProvider serviceProvider) {
         super(new TradeDetailsModel(), NavigationTarget.TRADE_DETAILS);
 
         this.serviceProvider = serviceProvider;
+        userIdentityService = serviceProvider.getUserService().getUserIdentityService();
         view = new TradeDetailsView(model, this);
     }
     @Override
@@ -55,5 +59,9 @@ public class TradeDetailsController extends TabController<TradeDetailsModel> {
 // is this needed?
     public void onQuit() {
         serviceProvider.getShutDownHandler().shutdown();
+    }
+
+    void onClose() {
+        OverlayController.hide();
     }
 }

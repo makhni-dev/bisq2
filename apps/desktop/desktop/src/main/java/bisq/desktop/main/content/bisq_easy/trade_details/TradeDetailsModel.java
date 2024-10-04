@@ -19,6 +19,7 @@ package bisq.desktop.main.content.bisq_easy.trade_details;
 
 import bisq.bisq_easy.NavigationTarget;
 import bisq.desktop.common.view.TabModel;
+import javafx.beans.property.SimpleStringProperty;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,5 +30,11 @@ public class TradeDetailsModel extends TabModel {
     @Override
     public NavigationTarget getDefaultNavigationTarget() {
         return NavigationTarget.TRADE_DETAILS;
+    }
+    public SimpleStringProperty getSellerId() {
+        return new SimpleStringProperty("test");
+    }
+    public SimpleStringProperty getBuyerId() {
+        return new SimpleStringProperty("test buyer");
     }
 }

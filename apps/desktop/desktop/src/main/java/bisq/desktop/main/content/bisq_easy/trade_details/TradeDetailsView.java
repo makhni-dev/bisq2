@@ -18,40 +18,71 @@
 package bisq.desktop.main.content.bisq_easy.trade_details;
 
 import bisq.bisq_easy.NavigationTarget;
-import bisq.desktop.common.view.TabView;
+import bisq.desktop.common.Layout;
 import bisq.desktop.common.Styles;
+import bisq.desktop.overlay.OverlayModel;
+import bisq.desktop.common.view.NavigationView;
+import bisq.desktop.components.controls.BisqIconButton;
+import bisq.desktop.components.controls.MaterialTextField;
 import bisq.i18n.Res;
 
+import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TradeDetailsView extends TabView<TradeDetailsModel, TradeDetailsController> {
-    public TradeDetailsView(TradeDetailsModel model, TradeDetailsController controller) {
-        super(model, controller);
-        root.setPadding(new Insets(15, 30, 10, 30));
-        VBox.setMargin(scrollPane, new Insets(20, 0, 0, 0));
+public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsModel, TradeDetailsController> {
 
-        Styles styles = new Styles("bisq-text-grey-9", "bisq-text-white", "bisq-text-green", "bisq-text-grey-9");
-        addTab(Res.get("bisqEasy.walletGuide.intro"),
-                NavigationTarget.WALLET_GUIDE_INTRO,
-                styles);
-        addTab(Res.get("bisqEasy.walletGuide.download"),
-                NavigationTarget.WALLET_GUIDE_DOWNLOAD,
-                styles);
+    private final Button closeButton;
+
+    // box containing all details
+    private final VBox formVBox;
+    private final MaterialTextField sellerAccountId;
+    private final MaterialTextField buyerAccountId;
+
+    public TradeDetailsView(TradeDetailsModel model, TradeDetailsController controller) {
+        super(new AnchorPane(), model, controller);
+
+        root.setPrefWidth(OverlayModel.WIDTH);
+        root.setPrefHeight(OverlayModel.HEIGHT);
+
+        //is this box necessary?
+        formVBox = new VBox(25);
+        HBox.setHgrow(formVBox, Priority.ALWAYS);
+        root.getChildren().add(formVBox);
+
+
+        sellerAccountId = new MaterialTextField("seller account name", null);
+        // create a function for this
+        sellerAccountId.setEditable(false);
+        formVBox.getChildren().add(sellerAccountId);
+        sellerAccountId.setIconTooltip("a tooltip");
+
+        buyerAccountId = new MaterialTextField("buyer account name", null);
+        // create a function for this
+        buyerAccountId.setEditable(false);
+        formVBox.getChildren().add(buyerAccountId);
+        buyerAccountId.setIconTooltip("a tooltip");
+
+        closeButton = BisqIconButton.createIconButton("close");
+        Layout.pinToAnchorPane(closeButton, 16, 20, null, null);
+        root.getChildren().add(closeButton);
     }
 
     @Override
     protected void onViewAttached() {
-        line.prefWidthProperty().unbind();
-        double paddings = root.getPadding().getLeft() + root.getPadding().getRight();
-        line.prefWidthProperty().bind(root.widthProperty().subtract(paddings));
+        sellerAccountId.textProperty().bind(model.getSellerId());
+        buyerAccountId.textProperty().bind(model.getBuyerId());
+        closeButton.setOnAction(e -> controller.onClose());
     }
 
     @Override
     protected void onViewDetached() {
-        line.prefWidthProperty().unbind();
+        closeButton.setOnAction(null);
     }
 }
