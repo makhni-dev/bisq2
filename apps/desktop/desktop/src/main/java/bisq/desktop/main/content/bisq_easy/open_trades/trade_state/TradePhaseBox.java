@@ -225,6 +225,10 @@ class TradePhaseBox {
             Navigation.navigateTo(NavigationTarget.WALLET_GUIDE);
         }
 
+        void onViewTradeDetails() {
+            Navigation.navigateTo(NavigationTarget.TRADE_DETAILS);
+        }
+
         void onReportToMediator() {
             OpenTradesUtils.reportToMediator(model.getSelectedChannel(),
                     model.getBisqEasyTrade().getContract(),
@@ -270,7 +274,7 @@ class TradePhaseBox {
     public static class View extends bisq.desktop.common.view.View<VBox, Model, Controller> {
         private final Label phase1Label, phase2Label, phase3Label, phase4Label;
         private final Button requestMediationButton;
-        private final BisqMenuItem openTradeGuide, walletHelp, reportToMediator;
+        private final BisqMenuItem openTradeGuide, walletHelp, reportToMediator, viewTradeDetails;
         private final List<Triple<HBox, Label, Badge>> phaseItems;
         private Subscription phaseIndexPin;
 
@@ -304,7 +308,9 @@ class TradePhaseBox {
             openTradeGuide.setPrefWidth(width);
             reportToMediator = new BisqMenuItem("icon-report", "icon-report-white", Res.get("bisqEasy.tradeState.reportToMediator"));
             reportToMediator.setPrefWidth(width);
-            VBox tradeOptionsVBox = new VBox(10, walletHelp, openTradeGuide, reportToMediator);
+            viewTradeDetails = new BisqMenuItem("icon-report", "icon-report-white", Res.get("bisqEasy.tradeDetails"));
+            viewTradeDetails.setPrefWidth(width);
+            VBox tradeOptionsVBox = new VBox(10, walletHelp, openTradeGuide, reportToMediator, viewTradeDetails);
             tradeOptionsVBox.setPadding(new Insets(0, 20, 0, 0));
 
             requestMediationButton = new Button(Res.get("bisqEasy.tradeState.requestMediation"));
@@ -342,6 +348,7 @@ class TradePhaseBox {
             reportToMediator.setOnAction(e -> controller.onReportToMediator());
             openTradeGuide.setOnAction(e -> controller.onOpenTradeGuide());
             walletHelp.setOnAction(e -> controller.onOpenWalletHelp());
+            viewTradeDetails.setOnAction(e -> controller.onViewTradeDetails());
             phaseIndexPin = EasyBind.subscribe(model.getPhaseIndex(), this::phaseIndexChanged);
         }
 
