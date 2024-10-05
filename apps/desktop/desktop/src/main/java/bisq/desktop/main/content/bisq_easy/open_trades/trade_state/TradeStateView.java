@@ -41,7 +41,7 @@ import org.fxmisc.easybind.Subscription;
 public class TradeStateView extends View<VBox, TradeStateModel, TradeStateController> {
     private final HBox phaseAndInfoHBox, cancelledHBox, interruptedHBox, errorHBox, isInMediationHBox;
     private final Button cancelButton, closeTradeButton, exportButton, reportToMediatorButton, acceptSellersPriceButton,
-            rejectPriceButton;
+            rejectPriceButton, viewTradeDetailsButton;
     private final Label cancelledInfo, errorMessage, buyerPriceDescriptionApprovalOverlay, sellerPriceDescriptionApprovalOverlay;
     private final VBox tradePhaseBox, tradeDataHeaderBox, sellerPriceApprovalOverlay;
     private final Pane sellerPriceApprovalContent;
@@ -57,8 +57,11 @@ public class TradeStateView extends View<VBox, TradeStateModel, TradeStateContro
         cancelButton = new Button();
         cancelButton.setMinWidth(160);
         cancelButton.getStyleClass().add("outlined-button");
+        viewTradeDetailsButton = new Button();
+        viewTradeDetailsButton.setMinWidth(160);
+        viewTradeDetailsButton.getStyleClass().add("outlined-button");
 
-        tradeDataHeader.getChildren().addAll(Spacer.fillHBox(), cancelButton);
+        tradeDataHeader.getChildren().addAll(Spacer.fillHBox(), viewTradeDetailsButton, cancelButton);
         tradeDataHeaderBox = new VBox(tradeDataHeader, Layout.hLine());
 
 
@@ -186,6 +189,7 @@ public class TradeStateView extends View<VBox, TradeStateModel, TradeStateContro
         });
 
         cancelButton.setOnAction(e -> controller.onInterruptTrade());
+        viewTradeDetailsButton.setOnAction(e -> controller.onViewTradeDetails());
         closeTradeButton.setOnAction(e -> controller.onCloseTrade());
         exportButton.setOnAction(e -> controller.onExportTrade());
         rejectPriceButton.setOnAction(e -> controller.onRejectPrice());
