@@ -225,7 +225,17 @@ public class TradeStateController implements Controller {
                 //  .onAction(this::doInterruptTrade)
                 //  .closeButtonText(Res.get("confirmation.no"))
                 //  .show();
-        Navigation.navigateTo(NavigationTarget.TRADE_DETAILS);
+        // controller.getView().getRoot().onViewAttached()
+        // Navigation.navigateTo(NavigationTarget.BISQ_EASY_TRADE_DETAILS);
+        model.getChannel();
+        Optional<BisqEasyTrade> optionalBisqEasyTrade = BisqEasyServiceUtil.findTradeFromChannel(serviceProvider, model.getChannel().get());
+        if (optionalBisqEasyTrade.isEmpty()) {
+            model.resetAll();
+            return;
+        }
+
+        BisqEasyTrade bisqEasyTrade = optionalBisqEasyTrade.get();
+        Navigation.navigateTo(NavigationTarget.BISQ_EASY_TRADE_DETAILS, new TradeDetailsController.InitData(bisqEasyTrade));
     }
 
     void onRejectPrice() {

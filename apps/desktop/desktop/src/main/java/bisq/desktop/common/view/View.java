@@ -50,6 +50,7 @@ public abstract class View<R extends Region, M extends Model, C extends Controll
     }
 
     private void handleSceneChange(Scene oldValue, Scene newScene) {
+        System.out.print("handling scene change");
         if (oldValue == null && newScene != null) {
             if (newScene.getWindow() != null) {
                 onViewAttachedPrivate();

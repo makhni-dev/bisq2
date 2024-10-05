@@ -44,6 +44,7 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
     private final VBox formVBox;
     private final MaterialTextField sellerAccountId;
     private final MaterialTextField buyerAccountId;
+    private final MaterialTextField myTag;
 
     public TradeDetailsView(TradeDetailsModel model, TradeDetailsController controller) {
         super(new AnchorPane(), model, controller);
@@ -69,6 +70,12 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         formVBox.getChildren().add(buyerAccountId);
         buyerAccountId.setIconTooltip("a tooltip");
 
+        myTag = new MaterialTextField("my tag", null);
+        // create a function for this
+        myTag.setEditable(false);
+        formVBox.getChildren().add(myTag);
+        myTag.setIconTooltip("a tooltip");
+
         closeButton = BisqIconButton.createIconButton("close");
         Layout.pinToAnchorPane(closeButton, 16, 20, null, null);
         root.getChildren().add(closeButton);
@@ -77,7 +84,8 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
     @Override
     protected void onViewAttached() {
         sellerAccountId.textProperty().bind(model.getSellerId());
-        buyerAccountId.textProperty().bind(model.getBuyerId());
+        buyerAccountId.textProperty().bind(model.getTradeId());
+        myTag.textProperty().bind(model.getMyTag());
         closeButton.setOnAction(e -> controller.onClose());
     }
 

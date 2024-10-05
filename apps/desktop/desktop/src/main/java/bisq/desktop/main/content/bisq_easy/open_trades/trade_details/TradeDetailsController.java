@@ -24,28 +24,80 @@ import bisq.bisq_easy.NavigationTarget;
 import bisq.desktop.ServiceProvider;
 import bisq.desktop.overlay.OverlayController;
 import bisq.user.identity.UserIdentityService;
+import bisq.chat.bisqeasy.open_trades.BisqEasyOpenTradeChannelService;
+import bisq.trade.bisq_easy.BisqEasyTradeService;
+import bisq.desktop.common.view.NavigationController;
+import bisq.desktop.common.view.InitWithDataController;
+import bisq.trade.bisq_easy.BisqEasyTrade;
 
 import java.util.Optional;
 
 import lombok.Getter;
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
 
 @Slf4j
-public class TradeDetailsController extends TabController<TradeDetailsModel> {
+public class TradeDetailsController extends NavigationController implements InitWithDataController<TradeDetailsController.InitData> {
+    @Getter
+    @EqualsAndHashCode
+    @ToString
+    public static class InitData {
+        private final BisqEasyTrade bisqEasyTrade;
+
+        public InitData(BisqEasyTrade BisqEasyTrade) {
+            this.bisqEasyTrade = BisqEasyTrade;
+        }
+    }
+
     @Getter
     private final TradeDetailsView view;
+
+    @Getter
+    private final TradeDetailsModel model;
+
     private final ServiceProvider serviceProvider;
     protected final UserIdentityService userIdentityService;
 
     public TradeDetailsController(ServiceProvider serviceProvider) {
-        super(new TradeDetailsModel(), NavigationTarget.TRADE_DETAILS);
+        super(NavigationTarget.BISQ_EASY_TRADE_DETAILS);
 
         this.serviceProvider = serviceProvider;
         userIdentityService = serviceProvider.getUserService().getUserIdentityService();
+        model = new TradeDetailsModel();
         view = new TradeDetailsView(model, this);
     }
+
+    @Override
+    public void initWithData(InitData initData) {
+        BisqEasyTrade bisqEasyOffer = initData.getBisqEasyTrade();
+        System.out.println("SOME DATA HERE =========================");
+        System.out.println(bisqEasyOffer.getId());
+        System.out.println(bisqEasyOffer.getPaymentProof());
+        model.setTradeId(bisqEasyOffer.getId());
+        model.setMyTag(bisqEasyOffer.getMyIdentity().getTag());
+    }
+
     @Override
     public void onActivate() {
         // Optional<BisqEasyTrade> optionalBisqEasyTrade = BisqEasyServiceUtil.findTradeFromChannel(serviceProvider, channel);
+        // tradesPin = bisqEasyTradeService.getTrades().addObserver(new CollectionObserver<>() {
+        //     @Override
+        //     public void add(BisqEasyTrade trade) {
+        //         handleTradeAdded(trade);
+        //     }
+
+        //     @Override
+        //     public void remove(Object element) {
+        //         if (element instanceof BisqEasyTrade) {
+        //             handleTradeRemoved((BisqEasyTrade) element);
+        //         }
+        //     }
+
+        //     @Override
+        //     public void clear() {
+        //         handleTradesCleared();
+        //     }
+        // });
     }
 
     @Override

@@ -226,7 +226,7 @@ class TradePhaseBox {
         }
 
         void onViewTradeDetails() {
-            Navigation.navigateTo(NavigationTarget.TRADE_DETAILS);
+            Navigation.navigateTo(NavigationTarget.BISQ_EASY_TRADE_DETAILS);
         }
 
         void onReportToMediator() {

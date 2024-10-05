@@ -22,19 +22,28 @@ import bisq.desktop.common.view.TabModel;
 import javafx.beans.property.SimpleStringProperty;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import lombok.Setter;
 
 @Slf4j
 @Getter
 public class TradeDetailsModel extends TabModel {
+    @Setter
+    private String tradeId; 
+    @Setter
+    private String myTag; 
 
     @Override
     public NavigationTarget getDefaultNavigationTarget() {
-        return NavigationTarget.TRADE_DETAILS;
+        return NavigationTarget.BISQ_EASY_TRADE_DETAILS;
     }
     public SimpleStringProperty getSellerId() {
         return new SimpleStringProperty("test");
     }
-    public SimpleStringProperty getBuyerId() {
-        return new SimpleStringProperty("test buyer");
+    public SimpleStringProperty getTradeId() {
+        return new SimpleStringProperty(tradeId);
     }
+    public SimpleStringProperty getMyTag() {
+        return new SimpleStringProperty(myTag);
+    }
+
 }
