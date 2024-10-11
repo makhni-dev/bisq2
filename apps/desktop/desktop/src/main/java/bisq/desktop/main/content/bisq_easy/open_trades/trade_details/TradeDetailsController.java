@@ -24,6 +24,7 @@ import bisq.bisq_easy.NavigationTarget;
 import bisq.desktop.ServiceProvider;
 import bisq.desktop.overlay.OverlayController;
 import bisq.user.identity.UserIdentityService;
+import bisq.chat.bisqeasy.open_trades.BisqEasyOpenTradeChannel;
 import bisq.chat.bisqeasy.open_trades.BisqEasyOpenTradeChannelService;
 import bisq.trade.bisq_easy.BisqEasyTradeService;
 import bisq.desktop.common.view.NavigationController;
@@ -43,9 +44,11 @@ public class TradeDetailsController extends NavigationController implements Init
     @ToString
     public static class InitData {
         private final BisqEasyTrade bisqEasyTrade;
+        private final BisqEasyOpenTradeChannel channel;
 
-        public InitData(BisqEasyTrade BisqEasyTrade) {
+        public InitData(BisqEasyTrade BisqEasyTrade, BisqEasyOpenTradeChannel channel) {
             this.bisqEasyTrade = BisqEasyTrade;
+            this.channel = channel;
         }
     }
 
@@ -69,35 +72,21 @@ public class TradeDetailsController extends NavigationController implements Init
 
     @Override
     public void initWithData(InitData initData) {
-        BisqEasyTrade bisqEasyOffer = initData.getBisqEasyTrade();
+        BisqEasyTrade trade = initData.getBisqEasyTrade();
         System.out.println("SOME DATA HERE =========================");
-        System.out.println(bisqEasyOffer.getId());
-        System.out.println(bisqEasyOffer.getPaymentProof());
-        model.setTradeId(bisqEasyOffer.getId());
-        model.setMyTag(bisqEasyOffer.getMyIdentity().getTag());
+        System.out.println(trade.getId());
+        System.out.println(trade.getPaymentProof());
+        model.setTradeId(trade.getId());
+        
+        model.setMyNickname(initData.channel.getMyUserIdentity().getUserName());
+        model.setPeerNickname(initData.channel.getPeer().getUserName());
+        model.setMyTag(trade.getMyIdentity().getTag());
+        model.setBitcoinPaymentData(trade.getBitcoinPaymentData().get());
+        model.setTradeAmount(trade.getOffer().getAmountSpec().toString());
     }
 
     @Override
     public void onActivate() {
-        // Optional<BisqEasyTrade> optionalBisqEasyTrade = BisqEasyServiceUtil.findTradeFromChannel(serviceProvider, channel);
-        // tradesPin = bisqEasyTradeService.getTrades().addObserver(new CollectionObserver<>() {
-        //     @Override
-        //     public void add(BisqEasyTrade trade) {
-        //         handleTradeAdded(trade);
-        //     }
-
-        //     @Override
-        //     public void remove(Object element) {
-        //         if (element instanceof BisqEasyTrade) {
-        //             handleTradeRemoved((BisqEasyTrade) element);
-        //         }
-        //     }
-
-        //     @Override
-        //     public void clear() {
-        //         handleTradesCleared();
-        //     }
-        // });
     }
 
     @Override

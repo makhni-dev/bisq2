@@ -31,8 +31,6 @@ import bisq.trade.bisq_easy.BisqEasyTrade;
 import bisq.user.profile.UserProfile;
 import bisq.user.reputation.ReputationScore;
 import bisq.user.reputation.ReputationService;
-import bisq.desktop.common.view.Navigation;
-import bisq.bisq_easy.NavigationTarget;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -42,7 +40,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -137,10 +134,6 @@ public class TradeDataHeader {
         public void onDeactivate() {
             channelPin.unsubscribe();
         }
-
-        void onViewTradeDetails() {
-            Navigation.navigateTo(NavigationTarget.BISQ_EASY_TRADE_DETAILS);
-        }
     }
 
     @Slf4j
@@ -175,7 +168,6 @@ public class TradeDataHeader {
         private final Label peerDescription;
         private final Triple<Triple<Text, Text, Text>, HBox, VBox> leftAmount, rightAmount;
         private Subscription userProfilePin, reputationScorePin;
-        // private final Button viewTradeDetailsButton;
 
         private View(Model model, Controller controller) {
             super(new HBox(40), model, controller);
@@ -199,17 +191,12 @@ public class TradeDataHeader {
             leftAmount = getAmountElements();
             rightAmount = getAmountElements();
             tradeId = getElements(Res.get("bisqEasy.tradeState.header.tradeId"));
-            // viewTradeDetailsButton = new Button();
-            // viewTradeDetailsButton.setMinWidth(160);
-            // viewTradeDetailsButton.getStyleClass().add("outlined-button");
-
 
             root.getChildren().addAll(peerVBox,
                     direction.getThird(),
                     leftAmount.getThird(),
                     rightAmount.getThird(),
                     tradeId.getThird());
-                    // viewTradeDetailsButton);
         }
 
         @Override
@@ -224,7 +211,6 @@ public class TradeDataHeader {
             rightAmount.getFirst().getSecond().textProperty().bind(model.getRightAmount());
             rightAmount.getFirst().getThird().textProperty().bind(model.getRightCode());
             tradeId.getSecond().textProperty().bind(model.getTradeId());
-            // viewTradeDetailsButton.setOnAction(e -> controller.onViewTradeDetails());
 
             userProfilePin = EasyBind.subscribe(model.getPeersUserProfile(), peersUserProfileDisplay::setUserProfile);
             reputationScorePin = EasyBind.subscribe(model.getReputationScore(), peersUserProfileDisplay::setReputationScore);

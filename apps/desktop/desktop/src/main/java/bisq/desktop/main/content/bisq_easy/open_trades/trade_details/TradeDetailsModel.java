@@ -28,22 +28,44 @@ import lombok.Setter;
 @Getter
 public class TradeDetailsModel extends TabModel {
     @Setter
+    private String myNickname; 
+    @Setter
+    private String peerNickname; 
+    @Setter
     private String tradeId; 
     @Setter
     private String myTag; 
+    @Setter
+    private String bitcoinPaymentData; 
+    @Setter
+    private String tradeAmount; 
 
     @Override
     public NavigationTarget getDefaultNavigationTarget() {
         return NavigationTarget.BISQ_EASY_TRADE_DETAILS;
     }
-    public SimpleStringProperty getSellerId() {
-        return new SimpleStringProperty("test");
+    public SimpleStringProperty getMyNickname() {
+        return new SimpleStringProperty(myNickname);
+    }
+    public SimpleStringProperty getPeerNickname() {
+        return new SimpleStringProperty(peerNickname);
     }
     public SimpleStringProperty getTradeId() {
         return new SimpleStringProperty(tradeId);
     }
+    // create decorator for this
     public SimpleStringProperty getMyTag() {
         return new SimpleStringProperty(myTag);
+    }
+    public SimpleStringProperty getTradeAmount() {
+        return new SimpleStringProperty(tradeAmount);
+    }
+
+    public SimpleStringProperty getBitcoinPaymentAddress() {
+        if (bitcoinPaymentData == null){
+            return new SimpleStringProperty("Not yet provided");
+        }
+        return new SimpleStringProperty(bitcoinPaymentData);
     }
 
 }

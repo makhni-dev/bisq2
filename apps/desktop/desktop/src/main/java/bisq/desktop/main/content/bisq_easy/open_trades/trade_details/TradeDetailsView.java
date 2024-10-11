@@ -42,9 +42,12 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
 
     // box containing all details
     private final VBox formVBox;
-    private final MaterialTextField sellerAccountId;
-    private final MaterialTextField buyerAccountId;
+    private final MaterialTextField myNickname;
+    private final MaterialTextField peerNickname;
+    private final MaterialTextField tradeId;
     private final MaterialTextField myTag;
+    private final MaterialTextField tradeAmount;
+    private final MaterialTextField bitcoinPaymentAddress;
 
     public TradeDetailsView(TradeDetailsModel model, TradeDetailsController controller) {
         super(new AnchorPane(), model, controller);
@@ -57,35 +60,35 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         HBox.setHgrow(formVBox, Priority.ALWAYS);
         root.getChildren().add(formVBox);
 
+        myNickname = createMaterialTextField("My nickname", "a tooltip");
+        peerNickname = createMaterialTextField("Peer nickname", "a tooltip");
+        tradeId = createMaterialTextField("Trade ID","to be done");
+        myTag = createMaterialTextField("my tag", "a tooltop");
+        tradeAmount = createMaterialTextField("trade amount", "a tooltop");
+        bitcoinPaymentAddress = createMaterialTextField("Bitcoin payment address", "a tooltop");
 
-        sellerAccountId = new MaterialTextField("seller account name", null);
-        // create a function for this
-        sellerAccountId.setEditable(false);
-        formVBox.getChildren().add(sellerAccountId);
-        sellerAccountId.setIconTooltip("a tooltip");
-
-        buyerAccountId = new MaterialTextField("buyer account name", null);
-        // create a function for this
-        buyerAccountId.setEditable(false);
-        formVBox.getChildren().add(buyerAccountId);
-        buyerAccountId.setIconTooltip("a tooltip");
-
-        myTag = new MaterialTextField("my tag", null);
-        // create a function for this
-        myTag.setEditable(false);
-        formVBox.getChildren().add(myTag);
-        myTag.setIconTooltip("a tooltip");
 
         closeButton = BisqIconButton.createIconButton("close");
         Layout.pinToAnchorPane(closeButton, 16, 20, null, null);
         root.getChildren().add(closeButton);
     }
 
+    private MaterialTextField createMaterialTextField(String description, String tooltip){
+        MaterialTextField field = new MaterialTextField(description, null);
+        field.setEditable(false);
+        formVBox.getChildren().add(field);
+        field.setIconTooltip(tooltip);
+        return field;
+    }
+
     @Override
     protected void onViewAttached() {
-        sellerAccountId.textProperty().bind(model.getSellerId());
-        buyerAccountId.textProperty().bind(model.getTradeId());
+        myNickname.textProperty().bind(model.getMyNickname());
+        peerNickname.textProperty().bind(model.getPeerNickname());
+        tradeId.textProperty().bind(model.getTradeId());
         myTag.textProperty().bind(model.getMyTag());
+        bitcoinPaymentAddress.textProperty().bind(model.getBitcoinPaymentAddress());
+        tradeAmount.textProperty().bind(model.getTradeAmount());
         closeButton.setOnAction(e -> controller.onClose());
     }
 
