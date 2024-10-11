@@ -41,7 +41,9 @@ public class TradeDetailsModel extends TabModel {
     private String amountInFiat; 
 
     @Setter
-    private String bitcoinPaymentData; 
+    private String bitcoinPaymentAddress; 
+    @Getter
+    private boolean bitcoinPaymentAddressProvided;
     @Setter
     private String amountInBTC; 
     @Setter
@@ -54,7 +56,11 @@ public class TradeDetailsModel extends TabModel {
     private String bitcoinPaymentMethod; 
     @Setter
     private String paymentAccountData;
+    @Getter
+    private boolean paymentAccountDataProvided;
     private String mediator; 
+    @Getter
+    private boolean mediatorProvided;
 
     @Override
     public NavigationTarget getDefaultNavigationTarget() {
@@ -79,8 +85,10 @@ public class TradeDetailsModel extends TabModel {
     }
     public SimpleStringProperty getMediator() {
         if (mediator == null){
+            mediatorProvided = false;
             return new SimpleStringProperty("No mediator provided");
         }
+        mediatorProvided = true;
         return new SimpleStringProperty(mediator);
     }
     public SimpleStringProperty getAmountInFiat() {
@@ -103,15 +111,19 @@ public class TradeDetailsModel extends TabModel {
     }
 
     public SimpleStringProperty getBitcoinPaymentAddress() {
-        if (bitcoinPaymentData == null){
+        if (bitcoinPaymentAddress == null){
+            bitcoinPaymentAddressProvided = false;
             return new SimpleStringProperty("Not yet provided");
         }
-        return new SimpleStringProperty(bitcoinPaymentData);
+        bitcoinPaymentAddressProvided = true;
+        return new SimpleStringProperty(bitcoinPaymentAddress);
     }
     public SimpleStringProperty getPaymentAccountData() {
         if (paymentAccountData == null){
+            paymentAccountDataProvided = false;
             return new SimpleStringProperty("Not yet provided");
         }
+        paymentAccountDataProvided = true;
         return new SimpleStringProperty(paymentAccountData);
     }
 

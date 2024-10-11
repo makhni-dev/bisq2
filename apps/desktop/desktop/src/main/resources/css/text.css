@@ -641,6 +641,9 @@
     -fx-text-fill: -fx-light-text-color;
 }
 
+.material-text-field-low-focus {
+    -fx-text-fill: -fx-mid-text-color;
+}
 .material-text-field-help {
     -fx-font-size: 0.95em;
     -fx-text-fill: -fx-mid-text-color;

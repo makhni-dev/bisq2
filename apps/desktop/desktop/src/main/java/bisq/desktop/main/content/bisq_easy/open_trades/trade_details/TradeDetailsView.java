@@ -68,7 +68,7 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         detailsContainer.prefHeightProperty().bind(root.heightProperty());
         detailsContainer.prefWidthProperty().bind(root.widthProperty());
 
-        headline.getStyleClass().add("chat-guide-headline");
+        headline.getStyleClass().add("bisq-text-headline-3");
         root.getChildren().add(scrollPane);
 
         tradeId = createMaterialTextField("Trade ID");
@@ -83,7 +83,14 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         fiatPaymentMethod = createMaterialTextField("Fiat payment method");
         bitcoinPaymentMethod = createMaterialTextField("BTC payment method");
         paymentAccountData = createMaterialTextField("Payment account data");
+        // paymentAccountData.getTextInputControl().setVisible(false);
+        // paymentAccountData.setHelpText("Not yet provided");
 
+
+        // helpLabel.setManaged(helpLabel.isVisible());
+        // paymentAccountData.getHelpText()(true);
+        // paymentAccountData.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
+        // paymentAccountData.getTextInputControl().getStyleClass().add("material-text-field-read-only");
         mediator = createMaterialTextField("Mediator");
 
         closeButton = BisqIconButton.createIconButton("close");
@@ -107,15 +114,32 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         tradeId.textProperty().bind(model.getTradeId());
         tradeAmountFiat.textProperty().bind(model.getAmountInFiat());
         bitcoinPaymentAddress.textProperty().bind(model.getBitcoinPaymentAddress());
+        if (!model.isBitcoinPaymentAddressProvided()){
+            // Make the text less visible for the sake of clarity
+            bitcoinPaymentAddress.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
+        } else {
+            bitcoinPaymentAddress.getTextInputControl().getStyleClass().add("material-text-field");
+        }         
         mediator.textProperty().bind(model.getMediator());
+        if (!model.isMediatorProvided()){
+            // Make the text less visible for the sake of clarity
+            mediator.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
+        } else {
+            mediator.getTextInputControl().getStyleClass().add("material-text-field");
+        }         
         marketPrice.textProperty().bind(model.getMarketPrice());
         offerTakenTime.textProperty().bind(model.getOfferTakenDateTime());
         tradeAmountBTC.textProperty().bind(model.getAmountInBTC());
         fiatPaymentMethod.textProperty().bind(model.getFiatPaymentMethod());
         bitcoinPaymentMethod.textProperty().bind(model.getBitcoinPaymentMethod());
-        // possibly color text differently if not provided
+
         paymentAccountData.textProperty().bind(model.getPaymentAccountData());
-        
+        if (!model.isPaymentAccountDataProvided()){
+            // Make the text less visible for the sake of clarity
+            paymentAccountData.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
+        } else {
+            paymentAccountData.getTextInputControl().getStyleClass().add("material-text-field");
+        }         
         closeButton.setOnAction(e -> controller.onClose());
     }
 

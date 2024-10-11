@@ -81,7 +81,7 @@ public class TradeDetailsController extends NavigationController implements Init
         model.setTradeId(trade.getId());
         model.setMyUsername(channel.getMyUserIdentity().getUserName());
         model.setPeerUsername(channel.getPeer().getUserName());
-        model.setBitcoinPaymentData(trade.getBitcoinPaymentData().get());
+        model.setBitcoinPaymentAddress(trade.getBitcoinPaymentData().get());
         model.setMediator(channel.getMediator());
 
         BisqEasyContract contract = trade.getContract();
