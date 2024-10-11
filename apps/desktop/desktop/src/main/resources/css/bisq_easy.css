@@ -472,6 +472,14 @@
     -fx-background-color: -bisq-dark-grey-10;
 }
 
+/*******************************************************************************
+ * BisqEasyTradeDetails.tableView                                            *
+ ******************************************************************************/
+
+
+.bisq-easy-trade-details.table-view .table-cell {
+    -fx-background-color: -bisq-dark-grey-10;
+}
 
 /*******************************************************************************
  * Header                                                                      *

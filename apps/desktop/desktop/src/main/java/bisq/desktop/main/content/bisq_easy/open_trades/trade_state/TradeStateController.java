@@ -217,25 +217,15 @@ public class TradeStateController implements Controller {
     }
 
     void onViewTradeDetails() {
-        // TradeDetailsController controller = new TradeDetailsController(serviceProvider);
-        // controller.getView().show(); 
-        // controller.getView().display()
-        // new Popup().information("trade details").createGridPane();
-                //  .actionButtonText(Res.get("confirmation.yes"))
-                //  .onAction(this::doInterruptTrade)
-                //  .closeButtonText(Res.get("confirmation.no"))
-                //  .show();
-        // controller.getView().getRoot().onViewAttached()
-        // Navigation.navigateTo(NavigationTarget.BISQ_EASY_TRADE_DETAILS);
-        model.getChannel();
-        Optional<BisqEasyTrade> optionalBisqEasyTrade = BisqEasyServiceUtil.findTradeFromChannel(serviceProvider, model.getChannel().get());
+        BisqEasyOpenTradeChannel channel = model.getChannel().get();
+        Optional<BisqEasyTrade> optionalBisqEasyTrade = BisqEasyServiceUtil.findTradeFromChannel(serviceProvider, channel);
         if (optionalBisqEasyTrade.isEmpty()) {
             model.resetAll();
             return;
         }
 
         BisqEasyTrade bisqEasyTrade = optionalBisqEasyTrade.get();
-        Navigation.navigateTo(NavigationTarget.BISQ_EASY_TRADE_DETAILS, new TradeDetailsController.InitData(bisqEasyTrade, model.getChannel().get()));
+        Navigation.navigateTo(NavigationTarget.BISQ_EASY_TRADE_DETAILS, new TradeDetailsController.InitData(bisqEasyTrade, channel));
     }
 
     void onRejectPrice() {

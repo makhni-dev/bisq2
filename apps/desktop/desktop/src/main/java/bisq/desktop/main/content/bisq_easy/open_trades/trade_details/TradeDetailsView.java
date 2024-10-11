@@ -17,23 +17,23 @@
 
 package bisq.desktop.main.content.bisq_easy.open_trades.trade_details;
 
-import bisq.bisq_easy.NavigationTarget;
 import bisq.desktop.common.Layout;
-import bisq.desktop.common.Styles;
 import bisq.desktop.overlay.OverlayModel;
 import bisq.desktop.common.view.NavigationView;
 import bisq.desktop.components.controls.BisqIconButton;
 import bisq.desktop.components.controls.MaterialTextField;
-import bisq.i18n.Res;
-
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+import bisq.desktop.components.table.BisqTableView;
+import bisq.desktop.components.table.DateTableItem;
 
 @Slf4j
 public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsModel, TradeDetailsController> {
@@ -41,13 +41,14 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
     private final Button closeButton;
 
     // box containing all details
-    private final VBox formVBox;
+    private final VBox detailsContainer;
     private final MaterialTextField myNickname;
     private final MaterialTextField peerNickname;
     private final MaterialTextField tradeId;
     private final MaterialTextField myTag;
     private final MaterialTextField tradeAmount;
     private final MaterialTextField bitcoinPaymentAddress;
+    // private final BisqTableView<ListItem> tableView;
 
     public TradeDetailsView(TradeDetailsModel model, TradeDetailsController controller) {
         super(new AnchorPane(), model, controller);
@@ -55,10 +56,18 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         root.setPrefWidth(OverlayModel.WIDTH);
         root.setPrefHeight(OverlayModel.HEIGHT);
 
-        //is this box necessary?
-        formVBox = new VBox(25);
-        HBox.setHgrow(formVBox, Priority.ALWAYS);
-        root.getChildren().add(formVBox);
+        // tableView = new BisqTableView<>(tableView.getItems());
+        // tableView.getStyleClass().addAll("bisq-easy-open-trades");
+        detailsContainer = new VBox(5);
+        // detailsContainer.getStyleClass().add("bisq-easy-container-headline");
+        detailsContainer.setPadding(new Insets(30, 30, 30, 30));
+        Label headline = new Label("Trade details");
+        detailsContainer.getChildren().add(headline);
+        detailsContainer.prefHeightProperty().bind(root.heightProperty());
+        detailsContainer.prefWidthProperty().bind(root.widthProperty());
+
+        headline.getStyleClass().add("chat-guide-headline");
+        root.getChildren().add(detailsContainer);
 
         myNickname = createMaterialTextField("My nickname", "a tooltip");
         peerNickname = createMaterialTextField("Peer nickname", "a tooltip");
@@ -76,8 +85,10 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
     private MaterialTextField createMaterialTextField(String description, String tooltip){
         MaterialTextField field = new MaterialTextField(description, null);
         field.setEditable(false);
-        formVBox.getChildren().add(field);
-        field.setIconTooltip(tooltip);
+        field.showCopyIcon();
+        
+        detailsContainer.getChildren().add(field);
+        // field.setIconTooltip(tooltip);
         return field;
     }
 
