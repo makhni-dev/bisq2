@@ -278,6 +278,11 @@
     -fx-image: url("/images/icons/open-link-green.png");
 }
 
+#new-badge {
+    -fx-image: url("/images/new.png");
+}
+
+
 /* ------------------------------------------------------------------------------------ */
 /* Navigation */
 /* ------------------------------------------------------------------------------------ */
@@ -721,16 +726,16 @@
     -fx-image: url("/images/protocols/protocol-bisq-easy.png");
 }
 
-#protocol-bisq_musig {
-    -fx-image: url("/images/protocols/protocol-bisq-musig.png");
+#protocol-bisq-mu-sig {
+    -fx-image: url("/images/protocols/protocol-bisq-mu-sig.png");
 }
 
 #protocol-submarine {
     -fx-image: url("/images/protocols/protocol-submarine.png");
 }
 
-#protocol-liquid-musig {
-    -fx-image: url("/images/protocols/protocol-liquid-musig.png");
+#protocol-liquid-mu-sig {
+    -fx-image: url("/images/protocols/protocol-liquid-mu-sig.png");
 }
 
 #protocol-bisq-lightning {
@@ -1585,4 +1590,17 @@
 
 #sound-off {
     -fx-image: url("/images/video/sound_off.png");
+}
+
+
+/* ------------------------------------------------------------------------------------ */
+/* Reputation */
+/* ------------------------------------------------------------------------------------ */
+
+#offer-reputation {
+    -fx-image: url("/images/reputation/offer-rep-score.png");
+}
+
+#stars-reputation-table {
+    -fx-image: url("/images/reputation/rep-table.png");
 }

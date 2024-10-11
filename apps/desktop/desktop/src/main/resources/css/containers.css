@@ -350,6 +350,7 @@
     -fx-font-family: "IBM Plex Sans Light";
 }
 
+
 /*******************************************************************************
  *                                                                             *
  * RichTable                                                                   *
@@ -600,6 +601,17 @@
     -fx-padding: 50;
 }
 
+.bisq-card-bg {
+    -fx-background-color: -bisq-dark-grey-40;
+    -fx-background-radius: 8 8 8 8;
+    -fx-padding: 40;
+}
+
+.common-line-spacing .label {
+    -fx-line-spacing: 5px;
+    -fx-wrap-text: true;
+}
+
 #chat-message-quote-box-peer-msg {
     -fx-background-color: -bisq-dark-grey-20;
     -fx-background-radius: 0 8 8 0;
@@ -620,7 +632,7 @@
 
 /*******************************************************************************
  *                                                                             *
- * Controlsfx Popover                                                                  *
+ * Controlsfx Popover                                                          *
  *                                                                             *
  ******************************************************************************/
 

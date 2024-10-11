@@ -350,6 +350,81 @@
  * Reputation                                                                  *
  ******************************************************************************/
 
-.build-reputation .user-profile-selection {
+.reputation .user-profile-selection {
     -fx-padding: 0 5 0 20;
+}
+
+.reputation .label {
+    -fx-font-size: 1.15em;
+    -fx-line-spacing: 5px;
+    -fx-wrap-text: true;
+    -fx-fill: -fx-mid-text-color !important;
+    -fx-text-fill: -fx-mid-text-color !important;
+}
+
+.reputation .reputation-card-small .card-title,
+.reputation .reputation-card-large .card-title {
+    -fx-font-size: 1.7em;
+}
+
+.reputation .reputation-card-large {
+    -fx-max-width: 1000;
+    -fx-min-width: 800;
+}
+
+.reputation .reputation-card-small {
+    -fx-max-width: 490;
+    -fx-pref-width: 490;
+    -fx-min-width: 490;
+}
+
+.reputation .reputation-headline {
+    -fx-font-size: 2.5em;
+}
+
+.reputation .reputation-title {
+    -fx-font-size: 1.9em;
+}
+
+.reputation .reputation-headline,
+.reputation .reputation-title,
+.reputation .card-title {
+    -fx-fill: -fx-light-text-color !important;
+    -fx-text-fill: -fx-light-text-color !important;
+    -fx-font-family: "IBM Plex Sans Light";
+}
+
+.reputation .reputation-learn-more {
+    -fx-font-size: 1.15em;
+    -fx-font-family: "IBM Plex Sans Light";
+}
+
+.reputation .reputation-learn-more-link {
+    -fx-font-size: 1.15em;
+    -fx-font-family: "IBM Plex Sans Light";
+    -fx-underline: true;
+}
+
+.reputation .reputation-learn-more-link:hover {
+    -fx-fill: -bisq2-green !important;
+    -fx-text-fill: -bisq2-green !important;
+}
+
+.reputation .max-trade-amount-formula {
+    -fx-max-width: 1000;
+    -fx-min-width: 1000;
+}
+
+.reputation .max-trade-amount-formula-footnote {
+    -fx-font-size: 1.02em;
+}
+
+.popup-bg .bisq-common-bg {
+    -fx-padding: 10 30 30 30 !important;
+}
+
+.network-details-view {
+    -fx-background-color: -bisq-dark-grey-20;
+    -fx-border-color: transparent;
+    -fx-padding: 10;
 }

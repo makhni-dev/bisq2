@@ -18,65 +18,101 @@
 package bisq.desktop.main.content.reputation.build_reputation;
 
 import bisq.desktop.common.view.View;
+import bisq.desktop.components.containers.Spacer;
+import bisq.desktop.components.controls.BisqMenuItem;
 import bisq.i18n.Res;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class BuildReputationView extends View<VBox, BuildReputationModel, BuildReputationController> {
     private final Button burnBsqButton, bsqBondButton, accountAgeButton, signedAccountButton;
-    private final Hyperlink learnMore;
+    private final BisqMenuItem learnMoreLink;
 
     public BuildReputationView(BuildReputationModel model, BuildReputationController controller) {
         super(new VBox(), model, controller);
 
-        Label headlineLabel = new Label(Res.get("reputation.headline"));
-        headlineLabel.getStyleClass().add("bisq-text-headline-5");
+        Label headlineLabel = new Label(Res.get("reputation.buildReputation.headline"));
+        headlineLabel.getStyleClass().add("reputation-headline");
 
-        Label info = new Label(Res.get("reputation.info"));
-        info.setWrapText(true);
-        info.getStyleClass().addAll("bisq-text-13");
-        info.setMinHeight(220);
+        Label introLabelPart1 = new Label(Res.get("reputation.buildReputation.intro.part1"));
 
-        burnBsqButton = new Button(Res.get("reputation.burnBsq"));
-        burnBsqButton.getStyleClass().add("button-reduced-padding");
-        burnBsqButton.setPrefWidth(140);
+        Label formulaOutput = new Label(Res.get("reputation.buildReputation.intro.part1.formula.output"));
+        Label formulaInput = new Label(Res.get("reputation.buildReputation.intro.part1.formula.input"));
+        Label formulaDivisor = new Label("200");
+        Label formulaEquals = new Label("=");
+        VBox formulaQuotientVBox = new VBox(5, formulaInput, getLine(), formulaDivisor);
+        formulaQuotientVBox.setAlignment(Pos.CENTER);
+        HBox formulaHBox = new HBox(10, formulaOutput, formulaEquals, formulaQuotientVBox);
+        formulaHBox.setAlignment(Pos.CENTER);
+        formulaHBox.getStyleClass().add("max-trade-amount-formula");
+        Label formulaFootnote = new Label(Res.get("reputation.buildReputation.intro.part1.formula.footnote"));
+        formulaFootnote.getStyleClass().add("max-trade-amount-formula-footnote");
 
-        bsqBondButton = new Button(Res.get("reputation.bond"));
-        bsqBondButton.getStyleClass().add("button-reduced-padding");
-        bsqBondButton.setPrefWidth(130);
+        Label introLabelPart2 = new Label(Res.get("reputation.buildReputation.intro.part2"));
 
-        signedAccountButton = new Button(Res.get("reputation.signedWitness"));
-        signedAccountButton.getStyleClass().add("button-reduced-padding");
-        signedAccountButton.setPrefWidth(230);
+        Label title = new Label(Res.get("reputation.buildReputation.title"));
+        title.getStyleClass().add("reputation-title");
 
-        accountAgeButton = new Button(Res.get("reputation.accountAge"));
-        accountAgeButton.getStyleClass().add("button-reduced-padding");
-        accountAgeButton.setPrefWidth(140);
+        // Burn BSQ
+        burnBsqButton = new Button(Res.get("reputation.buildReputation.burnBsq.button"));
+        burnBsqButton.setDefaultButton(true);
+        VBox burnBsqBox = createAndGetBuildReputationMethodBox(
+                Res.get("reputation.buildReputation.burnBsq.title"),
+                Res.get("reputation.buildReputation.burnBsq.description"),
+                burnBsqButton
+        );
 
-        learnMore = new Hyperlink(Res.get("action.learnMore"));
+        // BSQ Bond
+        bsqBondButton = new Button(Res.get("reputation.buildReputation.bsqBond.button"));
+        VBox bsqBondBox = createAndGetBuildReputationMethodBox(
+                Res.get("reputation.buildReputation.bsqBond.title"),
+                Res.get("reputation.buildReputation.bsqBond.description"),
+                bsqBondButton
+        );
 
-        HBox buttons = new HBox(20, burnBsqButton, bsqBondButton, signedAccountButton, accountAgeButton);
+        HBox burnAndBondBox = new HBox(20, burnBsqBox, bsqBondBox);
 
-        VBox.setMargin(headlineLabel, new Insets(20, 0, 0, 0));
-        VBox.setMargin(buttons, new Insets(10, 0, 0, 0));
-        VBox vBox = new VBox(10, headlineLabel, info, buttons, learnMore);
-        vBox.getStyleClass().add("bisq-box-2");
-        vBox.setPadding(new Insets(30, 30, 20, 30));
-        vBox.setAlignment(Pos.TOP_LEFT);
+        // Signed Account
+        signedAccountButton = new Button(Res.get("reputation.buildReputation.signedAccount.button"));
+        VBox signedAccountBox = createAndGetBuildReputationMethodBox(
+                Res.get("reputation.buildReputation.signedAccount.title"),
+                Res.get("reputation.buildReputation.signedAccount.description"),
+                signedAccountButton
+        );
 
-        VBox.setMargin(vBox, new Insets(0, 0, 20, 0));
-        VBox.setVgrow(vBox, Priority.SOMETIMES);
-        root.setPadding(new Insets(0, 40, 40, 40));
-        root.getChildren().addAll(vBox);
-        root.getStyleClass().add("build-reputation");
+        // Account Age
+        accountAgeButton = new Button(Res.get("reputation.buildReputation.accountAge.button"));
+        VBox accountAgeBox = createAndGetBuildReputationMethodBox(
+                Res.get("reputation.buildReputation.accountAge.title"),
+                Res.get("reputation.buildReputation.accountAge.description"),
+                accountAgeButton
+        );
+
+        HBox signedAccountAndAgeBox = new HBox(20, signedAccountBox, accountAgeBox);
+
+        Label learnMoreLabel = new Label(Res.get("reputation.buildReputation.learnMore"));
+        learnMoreLink = new BisqMenuItem(Res.get("reputation.buildReputation.learnMore.link"));
+        learnMoreLabel.getStyleClass().addAll("reputation-learn-more");
+        learnMoreLink.getStyleClass().addAll("reputation-learn-more-link");
+        HBox learnMoreHBox = new HBox(4, learnMoreLabel, learnMoreLink);
+
+
+        VBox contentBox = new VBox(20);
+        contentBox.getChildren().addAll(headlineLabel, introLabelPart1, formulaHBox,
+                formulaFootnote, introLabelPart2, title, burnAndBondBox, signedAccountAndAgeBox, learnMoreHBox);
+        contentBox.getStyleClass().add("bisq-common-bg");
+        VBox.setMargin(formulaFootnote, new Insets(-15, 0, 0, 0));
+        VBox.setMargin(title, new Insets(25, 0, 0, 0));
+        root.getChildren().addAll(contentBox);
+        root.setPadding(new Insets(0, 40, 20, 40));
+        root.getStyleClass().add("reputation");
     }
 
     @Override
@@ -85,7 +121,7 @@ public class BuildReputationView extends View<VBox, BuildReputationModel, BuildR
         bsqBondButton.setOnAction(e -> controller.onBsqBond());
         signedAccountButton.setOnAction(e -> controller.onSignedAccount());
         accountAgeButton.setOnAction(e -> controller.onAccountAge());
-        learnMore.setOnAction(e -> controller.onLearnMore());
+        learnMoreLink.setOnAction(e -> controller.onLearnMore());
     }
 
     @Override
@@ -94,6 +130,30 @@ public class BuildReputationView extends View<VBox, BuildReputationModel, BuildR
         bsqBondButton.setOnAction(null);
         signedAccountButton.setOnAction(null);
         accountAgeButton.setOnAction(null);
-        learnMore.setOnAction(null);
+        learnMoreLink.setOnAction(null);
+    }
+
+    private VBox createAndGetBuildReputationMethodBox(String title, String description, Button button) {
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("card-title");
+        Label descriptionLabel = new Label(description);
+        if (!button.isDefaultButton()) {
+            button.getStyleClass().add("outlined-button");
+        }
+        button.getStyleClass().addAll("medium-large-button");
+        button.setMaxWidth(Double.MAX_VALUE);
+        VBox vBox = new VBox(20, titleLabel, descriptionLabel, Spacer.fillVBox(), button);
+        vBox.setFillWidth(true);
+        vBox.getStyleClass().addAll("reputation-card-small", "bisq-card-bg");
+        return vBox;
+    }
+
+    private Region getLine() {
+        Region line = new Region();
+        line.setMinHeight(1);
+        line.setMaxHeight(1);
+        line.setStyle("-fx-background-color: -bisq-border-color-grey");
+        line.setPadding(new Insets(9, 0, 8, 0));
+        return line;
     }
 }
