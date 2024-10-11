@@ -33,20 +33,22 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import bisq.desktop.components.table.BisqTableView;
+import javafx.scene.control.ScrollPane;
 import bisq.desktop.components.table.DateTableItem;
 
 @Slf4j
 public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsModel, TradeDetailsController> {
 
     private final Button closeButton;
+     private final ScrollPane scrollPane;
 
     // box containing all details
     private final VBox detailsContainer;
     private final MaterialTextField myNickname;
     private final MaterialTextField peerNickname;
     private final MaterialTextField tradeId;
-    private final MaterialTextField myTag;
-    private final MaterialTextField tradeAmount, bitcoinPaymentAddress, mediator, marketPrice;
+    private final MaterialTextField tradeAmountFiat;
+    private final MaterialTextField tradeAmountBTC, bitcoinPaymentAddress, mediator, marketPrice, offerTakenTime;
     // private final BisqTableView<ListItem> tableView;
 
     public TradeDetailsView(TradeDetailsModel model, TradeDetailsController controller) {
@@ -55,10 +57,10 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         root.setPrefWidth(OverlayModel.WIDTH);
         root.setPrefHeight(OverlayModel.HEIGHT);
 
-        // tableView = new BisqTableView<>(tableView.getItems());
-        // tableView.getStyleClass().addAll("bisq-easy-open-trades");
         detailsContainer = new VBox(5);
-        // detailsContainer.getStyleClass().add("bisq-easy-container-headline");
+        scrollPane = new ScrollPane(detailsContainer);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPadding(new Insets(30, 30, 30, 30));
         detailsContainer.setPadding(new Insets(30, 30, 30, 30));
         Label headline = new Label("Trade details");
         detailsContainer.getChildren().add(headline);
@@ -66,7 +68,7 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         detailsContainer.prefWidthProperty().bind(root.widthProperty());
 
         headline.getStyleClass().add("chat-guide-headline");
-        root.getChildren().add(detailsContainer);
+        root.getChildren().add(scrollPane);
 
         tradeId = createMaterialTextField("Trade ID");
         myNickname = createMaterialTextField("My username");
@@ -74,9 +76,10 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         bitcoinPaymentAddress = createMaterialTextField("Bitcoin payment address");
         mediator = createMaterialTextField("Mediator");
         marketPrice = createMaterialTextField("Market price");
+        offerTakenTime = createMaterialTextField("Offer taken date");
 
-        myTag = createMaterialTextField("my tag");
-        tradeAmount = createMaterialTextField("Trade amount in fiat");
+        tradeAmountFiat = createMaterialTextField("Trade amount in fiat");
+        tradeAmountBTC = createMaterialTextField("Trade amount in BTC");
 
         closeButton = BisqIconButton.createIconButton("close");
         Layout.pinToAnchorPane(closeButton, 16, 20, null, null);
@@ -97,12 +100,13 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         myNickname.textProperty().bind(model.getMyUsername());
         peerNickname.textProperty().bind(model.getPeerUsername());
         tradeId.textProperty().bind(model.getTradeId());
-        myTag.textProperty().bind(model.getMyTag());
+        tradeAmountFiat.textProperty().bind(model.getAmountInFiat());
         bitcoinPaymentAddress.textProperty().bind(model.getBitcoinPaymentAddress());
         mediator.textProperty().bind(model.getMediator());
         marketPrice.textProperty().bind(model.getMarketPrice());
+        offerTakenTime.textProperty().bind(model.getOfferTakenDateTime());
         
-        tradeAmount.textProperty().bind(model.getTradeAmount());
+        tradeAmountBTC.textProperty().bind(model.getAmountInBTC());
         closeButton.setOnAction(e -> controller.onClose());
     }
 

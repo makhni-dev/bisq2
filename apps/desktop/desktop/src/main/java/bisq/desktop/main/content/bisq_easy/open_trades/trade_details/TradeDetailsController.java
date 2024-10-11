@@ -19,6 +19,10 @@ package bisq.desktop.main.content.bisq_easy.open_trades.trade_details;
 
 import lombok.extern.slf4j.Slf4j;
 import bisq.desktop.common.view.Controller;
+import bisq.common.monetary.Fiat;
+import bisq.common.monetary.Coin;
+import bisq.common.monetary.Monetary;
+import bisq.presentation.formatters.AmountFormatter;
 import bisq.desktop.common.view.TabController;
 import bisq.bisq_easy.NavigationTarget;
 import bisq.desktop.ServiceProvider;
@@ -34,6 +38,7 @@ import bisq.trade.bisq_easy.BisqEasyTrade;
 import bisq.presentation.formatters.PriceFormatter;
 import bisq.desktop.main.content.bisq_easy.BisqEasyServiceUtil;
 import bisq.trade.bisq_easy.BisqEasyTradeUtils;
+import bisq.presentation.formatters.DateFormatter;
 
 import java.util.Optional;
 
@@ -84,15 +89,21 @@ public class TradeDetailsController extends NavigationController implements Init
         model.setBitcoinPaymentData(trade.getBitcoinPaymentData().get());
         model.setMediator(channel.getMediator());
 
-        // System.out.println(PriceFormatter.format(trade.getContract().getAgreedPriceSpec(), true));
-        // trade.getOffer().get
+        long date = trade.getContract().getTakeOfferDate();
+        model.setOfferTakenDateTime(DateFormatter.formatDateTime(date));
 
-        model.setMarketPrice(PriceFormatter.format(BisqEasyTradeUtils.getPriceQuote(trade)));
-        // String marketPrice = BisqEasyServiceUtil.getFormattedPriceSpec(trade.getContract().getAgreedPriceSpec());
-        // model.setMarketPrice(new SimpleStringProperty(marketPrice));
+        model.setMarketPrice(PriceFormatter.formatWithCode(BisqEasyTradeUtils.getPriceQuote(trade), false));
 
-        model.setMyTag(trade.getMyIdentity().getTag());
-        model.setTradeAmount(trade.getOffer().getAmountSpec().toString());
+        long quoteSideAmount = trade.getContract().getQuoteSideAmount();
+        Monetary quoteAmount = Fiat.from(quoteSideAmount, trade.getOffer().getMarket().getQuoteCurrencyCode());
+        String amountInFiat = AmountFormatter.formatAmount(quoteAmount, false);
+        String currencyAbbreviation = quoteAmount.getCode();
+        model.setAmountInFiat(amountInFiat + " " + currencyAbbreviation);
+
+        long baseSideAmount = trade.getContract().getBaseSideAmount();
+        Coin amountInBTC = Coin.asBtcFromValue(baseSideAmount);
+        String baseAmountString = AmountFormatter.formatAmount(amountInBTC, false);
+        model.setAmountInBTC(baseAmountString);
     }
 
     @Override

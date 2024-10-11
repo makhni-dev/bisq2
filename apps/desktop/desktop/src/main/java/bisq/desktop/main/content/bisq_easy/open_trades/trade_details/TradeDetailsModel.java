@@ -38,14 +38,16 @@ public class TradeDetailsModel extends TabModel {
     @Setter
     private String tradeId; 
     @Setter
-    private String myTag; 
+    private String amountInFiat; 
+
     @Setter
     private String bitcoinPaymentData; 
     @Setter
-    private String tradeAmount; 
-
+    private String amountInBTC; 
     @Setter
     private String marketPrice; 
+    @Setter
+    private String offerTakenDateTime; 
     private String mediator; 
 
     @Override
@@ -68,7 +70,6 @@ public class TradeDetailsModel extends TabModel {
         else{
             this.mediator = mediator.get().getUserName();
         }
-
     }
     public SimpleStringProperty getMediator() {
         if (mediator == null){
@@ -76,14 +77,17 @@ public class TradeDetailsModel extends TabModel {
         }
         return new SimpleStringProperty(mediator);
     }
-    public SimpleStringProperty getMyTag() {
-        return new SimpleStringProperty(myTag);
+    public SimpleStringProperty getAmountInFiat() {
+        return new SimpleStringProperty(amountInFiat);
     }
-    public SimpleStringProperty getTradeAmount() {
-        return new SimpleStringProperty(tradeAmount);
+    public SimpleStringProperty getAmountInBTC() {
+        return new SimpleStringProperty(amountInBTC);
     }
     public SimpleStringProperty getMarketPrice() {
         return new SimpleStringProperty(marketPrice);
+    }
+    public SimpleStringProperty getOfferTakenDateTime() {
+        return new SimpleStringProperty(offerTakenDateTime);
     }
 
     public SimpleStringProperty getBitcoinPaymentAddress() {

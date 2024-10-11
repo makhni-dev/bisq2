@@ -160,6 +160,8 @@ public class TradeStateView extends View<VBox, TradeStateModel, TradeStateContro
         cancelButton.visibleProperty().bind(model.getCancelButtonVisible().and(model.getShouldShowSellerPriceApprovalOverlay().not()));
         cancelButton.managedProperty().bind(model.getCancelButtonVisible().and(model.getShouldShowSellerPriceApprovalOverlay().not()));
 
+        viewTradeDetailsButton.textProperty().set("View trade details");
+
         rejectPriceButton.textProperty().bind(model.getInterruptTradeButtonText());
         buyerPriceDescriptionApprovalOverlay.textProperty().bind(model.getBuyerPriceDescriptionApprovalOverlay());
         sellerPriceDescriptionApprovalOverlay.textProperty().bind(model.getSellerPriceDescriptionApprovalOverlay());
