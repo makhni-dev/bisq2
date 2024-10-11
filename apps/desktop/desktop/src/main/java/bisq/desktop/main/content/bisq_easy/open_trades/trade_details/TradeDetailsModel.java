@@ -48,6 +48,12 @@ public class TradeDetailsModel extends TabModel {
     private String marketPrice; 
     @Setter
     private String offerTakenDateTime; 
+    @Setter
+    private String fiatPaymentMethod; 
+    @Setter
+    private String bitcoinPaymentMethod; 
+    @Setter
+    private String paymentAccountData;
     private String mediator; 
 
     @Override
@@ -89,12 +95,24 @@ public class TradeDetailsModel extends TabModel {
     public SimpleStringProperty getOfferTakenDateTime() {
         return new SimpleStringProperty(offerTakenDateTime);
     }
+    public SimpleStringProperty getFiatPaymentMethod() {
+        return new SimpleStringProperty(fiatPaymentMethod);
+    }
+    public SimpleStringProperty getBitcoinPaymentMethod() {
+        return new SimpleStringProperty(bitcoinPaymentMethod);
+    }
 
     public SimpleStringProperty getBitcoinPaymentAddress() {
         if (bitcoinPaymentData == null){
             return new SimpleStringProperty("Not yet provided");
         }
         return new SimpleStringProperty(bitcoinPaymentData);
+    }
+    public SimpleStringProperty getPaymentAccountData() {
+        if (paymentAccountData == null){
+            return new SimpleStringProperty("Not yet provided");
+        }
+        return new SimpleStringProperty(paymentAccountData);
     }
 
 }

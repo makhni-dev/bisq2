@@ -47,8 +47,9 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
     private final MaterialTextField myNickname;
     private final MaterialTextField peerNickname;
     private final MaterialTextField tradeId;
-    private final MaterialTextField tradeAmountFiat;
-    private final MaterialTextField tradeAmountBTC, bitcoinPaymentAddress, mediator, marketPrice, offerTakenTime;
+    private final MaterialTextField tradeAmountFiat, fiatPaymentMethod;
+    private final MaterialTextField tradeAmountBTC, bitcoinPaymentMethod, bitcoinPaymentAddress, mediator, marketPrice, offerTakenTime;
+    private final MaterialTextField paymentAccountData;
     // private final BisqTableView<ListItem> tableView;
 
     public TradeDetailsView(TradeDetailsModel model, TradeDetailsController controller) {
@@ -74,12 +75,16 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         myNickname = createMaterialTextField("My username");
         peerNickname = createMaterialTextField("Peer username");
         bitcoinPaymentAddress = createMaterialTextField("Bitcoin payment address");
-        mediator = createMaterialTextField("Mediator");
         marketPrice = createMaterialTextField("Market price");
         offerTakenTime = createMaterialTextField("Offer taken date");
 
         tradeAmountFiat = createMaterialTextField("Trade amount in fiat");
         tradeAmountBTC = createMaterialTextField("Trade amount in BTC");
+        fiatPaymentMethod = createMaterialTextField("Fiat payment method");
+        bitcoinPaymentMethod = createMaterialTextField("BTC payment method");
+        paymentAccountData = createMaterialTextField("Payment account data");
+
+        mediator = createMaterialTextField("Mediator");
 
         closeButton = BisqIconButton.createIconButton("close");
         Layout.pinToAnchorPane(closeButton, 16, 20, null, null);
@@ -105,8 +110,12 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         mediator.textProperty().bind(model.getMediator());
         marketPrice.textProperty().bind(model.getMarketPrice());
         offerTakenTime.textProperty().bind(model.getOfferTakenDateTime());
-        
         tradeAmountBTC.textProperty().bind(model.getAmountInBTC());
+        fiatPaymentMethod.textProperty().bind(model.getFiatPaymentMethod());
+        bitcoinPaymentMethod.textProperty().bind(model.getBitcoinPaymentMethod());
+        // possibly color text differently if not provided
+        paymentAccountData.textProperty().bind(model.getPaymentAccountData());
+        
         closeButton.setOnAction(e -> controller.onClose());
     }
 

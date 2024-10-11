@@ -17,34 +17,29 @@
 
 package bisq.desktop.main.content.bisq_easy.open_trades.trade_details;
 
-import lombok.extern.slf4j.Slf4j;
-import bisq.desktop.common.view.Controller;
-import bisq.common.monetary.Fiat;
-import bisq.common.monetary.Coin;
-import bisq.common.monetary.Monetary;
-import bisq.presentation.formatters.AmountFormatter;
-import bisq.desktop.common.view.TabController;
-import bisq.bisq_easy.NavigationTarget;
-import bisq.desktop.ServiceProvider;
-import bisq.desktop.overlay.OverlayController;
-import bisq.user.identity.UserIdentityService;
-import javafx.beans.property.SimpleStringProperty;
-import bisq.chat.bisqeasy.open_trades.BisqEasyOpenTradeChannel;
-import bisq.chat.bisqeasy.open_trades.BisqEasyOpenTradeChannelService;
-import bisq.trade.bisq_easy.BisqEasyTradeService;
-import bisq.desktop.common.view.NavigationController;
-import bisq.desktop.common.view.InitWithDataController;
-import bisq.trade.bisq_easy.BisqEasyTrade;
-import bisq.presentation.formatters.PriceFormatter;
-import bisq.desktop.main.content.bisq_easy.BisqEasyServiceUtil;
-import bisq.trade.bisq_easy.BisqEasyTradeUtils;
-import bisq.presentation.formatters.DateFormatter;
-
 import java.util.Optional;
 
+import bisq.bisq_easy.NavigationTarget;
+import bisq.chat.bisqeasy.open_trades.BisqEasyOpenTradeChannel;
+import bisq.common.monetary.Coin;
+import bisq.common.monetary.Fiat;
+import bisq.common.monetary.Monetary;
+import bisq.contract.bisq_easy.BisqEasyContract;
+import bisq.desktop.ServiceProvider;
+import bisq.desktop.common.view.Controller;
+import bisq.desktop.common.view.InitWithDataController;
+import bisq.desktop.common.view.NavigationController;
+import bisq.desktop.overlay.OverlayController;
+import bisq.presentation.formatters.AmountFormatter;
+import bisq.presentation.formatters.DateFormatter;
+import bisq.presentation.formatters.PriceFormatter;
+import bisq.trade.bisq_easy.BisqEasyTrade;
+import bisq.trade.bisq_easy.BisqEasyTradeUtils;
+import bisq.user.identity.UserIdentityService;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TradeDetailsController extends NavigationController implements InitWithDataController<TradeDetailsController.InitData> {
@@ -89,21 +84,30 @@ public class TradeDetailsController extends NavigationController implements Init
         model.setBitcoinPaymentData(trade.getBitcoinPaymentData().get());
         model.setMediator(channel.getMediator());
 
-        long date = trade.getContract().getTakeOfferDate();
+        BisqEasyContract contract = trade.getContract();
+        long date = contract.getTakeOfferDate();
         model.setOfferTakenDateTime(DateFormatter.formatDateTime(date));
 
         model.setMarketPrice(PriceFormatter.formatWithCode(BisqEasyTradeUtils.getPriceQuote(trade), false));
 
-        long quoteSideAmount = trade.getContract().getQuoteSideAmount();
+        long quoteSideAmount = contract.getQuoteSideAmount();
         Monetary quoteAmount = Fiat.from(quoteSideAmount, trade.getOffer().getMarket().getQuoteCurrencyCode());
-        String amountInFiat = AmountFormatter.formatAmount(quoteAmount, false);
+        String amountInFiat = AmountFormatter.formatAmount(quoteAmount);
         String currencyAbbreviation = quoteAmount.getCode();
         model.setAmountInFiat(amountInFiat + " " + currencyAbbreviation);
 
-        long baseSideAmount = trade.getContract().getBaseSideAmount();
+        long baseSideAmount = contract.getBaseSideAmount();
         Coin amountInBTC = Coin.asBtcFromValue(baseSideAmount);
         String baseAmountString = AmountFormatter.formatAmount(amountInBTC, false);
         model.setAmountInBTC(baseAmountString);
+
+        String btcPaymentMethod = contract.getBaseSidePaymentMethodSpec().getDisplayString();
+        model.setBitcoinPaymentMethod(btcPaymentMethod);
+        String fiatPaymentMethod = contract.getQuoteSidePaymentMethodSpec().getDisplayString();
+        model.setFiatPaymentMethod(fiatPaymentMethod);
+
+        String paymentAccountData = trade.getPaymentAccountData().get();
+        model.setPaymentAccountData(paymentAccountData);
     }
 
     @Override
