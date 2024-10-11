@@ -46,8 +46,7 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
     private final MaterialTextField peerNickname;
     private final MaterialTextField tradeId;
     private final MaterialTextField myTag;
-    private final MaterialTextField tradeAmount;
-    private final MaterialTextField bitcoinPaymentAddress;
+    private final MaterialTextField tradeAmount, bitcoinPaymentAddress, mediator, marketPrice;
     // private final BisqTableView<ListItem> tableView;
 
     public TradeDetailsView(TradeDetailsModel model, TradeDetailsController controller) {
@@ -69,36 +68,40 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         headline.getStyleClass().add("chat-guide-headline");
         root.getChildren().add(detailsContainer);
 
-        myNickname = createMaterialTextField("My nickname", "a tooltip");
-        peerNickname = createMaterialTextField("Peer nickname", "a tooltip");
-        tradeId = createMaterialTextField("Trade ID","to be done");
-        myTag = createMaterialTextField("my tag", "a tooltop");
-        tradeAmount = createMaterialTextField("trade amount", "a tooltop");
-        bitcoinPaymentAddress = createMaterialTextField("Bitcoin payment address", "a tooltop");
+        tradeId = createMaterialTextField("Trade ID");
+        myNickname = createMaterialTextField("My username");
+        peerNickname = createMaterialTextField("Peer username");
+        bitcoinPaymentAddress = createMaterialTextField("Bitcoin payment address");
+        mediator = createMaterialTextField("Mediator");
+        marketPrice = createMaterialTextField("Market price");
 
+        myTag = createMaterialTextField("my tag");
+        tradeAmount = createMaterialTextField("Trade amount in fiat");
 
         closeButton = BisqIconButton.createIconButton("close");
         Layout.pinToAnchorPane(closeButton, 16, 20, null, null);
         root.getChildren().add(closeButton);
     }
 
-    private MaterialTextField createMaterialTextField(String description, String tooltip){
+    private MaterialTextField createMaterialTextField(String description){
         MaterialTextField field = new MaterialTextField(description, null);
         field.setEditable(false);
         field.showCopyIcon();
         
         detailsContainer.getChildren().add(field);
-        // field.setIconTooltip(tooltip);
         return field;
     }
 
     @Override
     protected void onViewAttached() {
-        myNickname.textProperty().bind(model.getMyNickname());
-        peerNickname.textProperty().bind(model.getPeerNickname());
+        myNickname.textProperty().bind(model.getMyUsername());
+        peerNickname.textProperty().bind(model.getPeerUsername());
         tradeId.textProperty().bind(model.getTradeId());
         myTag.textProperty().bind(model.getMyTag());
         bitcoinPaymentAddress.textProperty().bind(model.getBitcoinPaymentAddress());
+        mediator.textProperty().bind(model.getMediator());
+        marketPrice.textProperty().bind(model.getMarketPrice());
+        
         tradeAmount.textProperty().bind(model.getTradeAmount());
         closeButton.setOnAction(e -> controller.onClose());
     }

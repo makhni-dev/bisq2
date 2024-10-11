@@ -19,7 +19,11 @@ package bisq.desktop.main.content.bisq_easy.open_trades.trade_details;
 
 import bisq.bisq_easy.NavigationTarget;
 import bisq.desktop.common.view.TabModel;
+import bisq.user.profile.UserProfile;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
+import java.util.Optional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.Setter;
@@ -28,9 +32,9 @@ import lombok.Setter;
 @Getter
 public class TradeDetailsModel extends TabModel {
     @Setter
-    private String myNickname; 
+    private String myUsername; 
     @Setter
-    private String peerNickname; 
+    private String peerUsername; 
     @Setter
     private String tradeId; 
     @Setter
@@ -40,25 +44,46 @@ public class TradeDetailsModel extends TabModel {
     @Setter
     private String tradeAmount; 
 
+    @Setter
+    private String marketPrice; 
+    private String mediator; 
+
     @Override
     public NavigationTarget getDefaultNavigationTarget() {
         return NavigationTarget.BISQ_EASY_TRADE_DETAILS;
     }
-    public SimpleStringProperty getMyNickname() {
-        return new SimpleStringProperty(myNickname);
+    public SimpleStringProperty getMyUsername() {
+        return new SimpleStringProperty(myUsername);
     }
-    public SimpleStringProperty getPeerNickname() {
-        return new SimpleStringProperty(peerNickname);
+    public SimpleStringProperty getPeerUsername() {
+        return new SimpleStringProperty(peerUsername);
     }
     public SimpleStringProperty getTradeId() {
         return new SimpleStringProperty(tradeId);
     }
-    // create decorator for this
+    public void setMediator(Optional<UserProfile> mediator){
+        if (mediator.isEmpty()) {
+            this.mediator = null;
+        } 
+        else{
+            this.mediator = mediator.get().getUserName();
+        }
+
+    }
+    public SimpleStringProperty getMediator() {
+        if (mediator == null){
+            return new SimpleStringProperty("No mediator provided");
+        }
+        return new SimpleStringProperty(mediator);
+    }
     public SimpleStringProperty getMyTag() {
         return new SimpleStringProperty(myTag);
     }
     public SimpleStringProperty getTradeAmount() {
         return new SimpleStringProperty(tradeAmount);
+    }
+    public SimpleStringProperty getMarketPrice() {
+        return new SimpleStringProperty(marketPrice);
     }
 
     public SimpleStringProperty getBitcoinPaymentAddress() {

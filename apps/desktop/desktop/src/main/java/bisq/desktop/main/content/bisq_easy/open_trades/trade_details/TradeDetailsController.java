@@ -24,12 +24,16 @@ import bisq.bisq_easy.NavigationTarget;
 import bisq.desktop.ServiceProvider;
 import bisq.desktop.overlay.OverlayController;
 import bisq.user.identity.UserIdentityService;
+import javafx.beans.property.SimpleStringProperty;
 import bisq.chat.bisqeasy.open_trades.BisqEasyOpenTradeChannel;
 import bisq.chat.bisqeasy.open_trades.BisqEasyOpenTradeChannelService;
 import bisq.trade.bisq_easy.BisqEasyTradeService;
 import bisq.desktop.common.view.NavigationController;
 import bisq.desktop.common.view.InitWithDataController;
 import bisq.trade.bisq_easy.BisqEasyTrade;
+import bisq.presentation.formatters.PriceFormatter;
+import bisq.desktop.main.content.bisq_easy.BisqEasyServiceUtil;
+import bisq.trade.bisq_easy.BisqEasyTradeUtils;
 
 import java.util.Optional;
 
@@ -73,15 +77,21 @@ public class TradeDetailsController extends NavigationController implements Init
     @Override
     public void initWithData(InitData initData) {
         BisqEasyTrade trade = initData.getBisqEasyTrade();
-        System.out.println("SOME DATA HERE =========================");
-        System.out.println(trade.getId());
-        System.out.println(trade.getPaymentProof());
+        BisqEasyOpenTradeChannel channel = initData.channel;
         model.setTradeId(trade.getId());
-        
-        model.setMyNickname(initData.channel.getMyUserIdentity().getUserName());
-        model.setPeerNickname(initData.channel.getPeer().getUserName());
-        model.setMyTag(trade.getMyIdentity().getTag());
+        model.setMyUsername(channel.getMyUserIdentity().getUserName());
+        model.setPeerUsername(channel.getPeer().getUserName());
         model.setBitcoinPaymentData(trade.getBitcoinPaymentData().get());
+        model.setMediator(channel.getMediator());
+
+        // System.out.println(PriceFormatter.format(trade.getContract().getAgreedPriceSpec(), true));
+        // trade.getOffer().get
+
+        model.setMarketPrice(PriceFormatter.format(BisqEasyTradeUtils.getPriceQuote(trade)));
+        // String marketPrice = BisqEasyServiceUtil.getFormattedPriceSpec(trade.getContract().getAgreedPriceSpec());
+        // model.setMarketPrice(new SimpleStringProperty(marketPrice));
+
+        model.setMyTag(trade.getMyIdentity().getTag());
         model.setTradeAmount(trade.getOffer().getAmountSpec().toString());
     }
 
@@ -96,11 +106,6 @@ public class TradeDetailsController extends NavigationController implements Init
     @Override
     protected Optional<? extends Controller> createController(NavigationTarget navigationTarget) {
         return Optional.empty();
-    }
-
-// is this needed?
-    public void onQuit() {
-        serviceProvider.getShutDownHandler().shutdown();
     }
 
     void onClose() {
