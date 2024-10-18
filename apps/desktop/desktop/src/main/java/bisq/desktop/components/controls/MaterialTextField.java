@@ -561,10 +561,16 @@ public class MaterialTextField extends Pane {
     }
 
     protected double getBgHeight() {
+        if (descriptionLabel.getText().isEmpty()) {
+            return 40;
+        }
         return 56;
     }
 
     protected double getFieldLayoutY() {
+        if (descriptionLabel.getText().isEmpty()) {
+            return 3;
+        }
         return 19;
     }
 
