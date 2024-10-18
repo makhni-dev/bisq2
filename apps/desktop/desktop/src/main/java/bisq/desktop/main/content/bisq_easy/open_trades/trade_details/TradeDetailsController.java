@@ -19,12 +19,15 @@ package bisq.desktop.main.content.bisq_easy.open_trades.trade_details;
 
 import java.util.Optional;
 
+import bisq.network.identity.NetworkId;
 import bisq.bisq_easy.NavigationTarget;
 import bisq.chat.bisqeasy.open_trades.BisqEasyOpenTradeChannel;
 import bisq.common.monetary.Coin;
 import bisq.common.monetary.Fiat;
 import bisq.common.monetary.Monetary;
 import bisq.contract.bisq_easy.BisqEasyContract;
+import java.util.stream.Collectors;
+import bisq.common.util.StringUtils;
 import bisq.desktop.ServiceProvider;
 import bisq.desktop.common.view.Controller;
 import bisq.desktop.common.view.InitWithDataController;
@@ -34,9 +37,11 @@ import bisq.presentation.formatters.AmountFormatter;
 import bisq.presentation.formatters.DateFormatter;
 import bisq.presentation.formatters.PriceFormatter;
 import bisq.trade.bisq_easy.BisqEasyTrade;
+import bisq.network.NetworkService;
 import bisq.trade.bisq_easy.BisqEasyTradeUtils;
 import bisq.user.identity.UserIdentityService;
 import javafx.beans.property.SimpleStringProperty;
+import com.google.common.base.Joiner;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -63,13 +68,14 @@ public class TradeDetailsController extends NavigationController
 
     @Getter
     private final TradeDetailsModel model;
-
+    private final NetworkService networkService;
     protected final UserIdentityService userIdentityService;
 
     public TradeDetailsController(ServiceProvider serviceProvider) {
         super(NavigationTarget.BISQ_EASY_TRADE_DETAILS);
 
         userIdentityService = serviceProvider.getUserService().getUserIdentityService();
+        networkService = serviceProvider.getNetworkService();
         model = new TradeDetailsModel();
         view = new TradeDetailsView(model, this);
     }
@@ -89,9 +95,26 @@ public class TradeDetailsController extends NavigationController
         model.setOfferTakenDateTime(DateFormatter.formatDateTime(date));
 
         model.setMarketPrice(PriceFormatter.formatWithCode(BisqEasyTradeUtils.getPriceQuote(trade), false));
-
+        // networkService.findNode()
+        // ServiceNode serviceNode = serviceProvider.getNetworkService().findServiceNode(transportType).orElseThrow();
+        // Node defaultNode = serviceNode.getDefaultNode();
         long quoteSideAmount = contract.getQuoteSideAmount();
         Monetary quoteAmount = Fiat.from(quoteSideAmount, trade.getOffer().getMarket().getQuoteCurrencyCode());
+        
+        NetworkId peerNetworkId = trade.getPeer().getNetworkId();
+        String peerAddress = Joiner.on(":").join(peerNetworkId.getAddressByTransportTypeMap().entrySet().stream()
+                .map(e -> StringUtils.truncate(e.getValue().getFullAddress(), Integer.MAX_VALUE))
+                .collect(Collectors.toList()));
+        System.out.println("netowkr address ------------------");
+        NetworkId myNetworkId = trade.getMyself().getNetworkId();
+        String myAddress = Joiner.on(":").join(myNetworkId.getAddressByTransportTypeMap().entrySet().stream()
+                .map(e -> StringUtils.truncate(e.getValue().getFullAddress(), Integer.MAX_VALUE))
+                .collect(Collectors.toList()));
+        System.out.println(peerAddress);
+        System.out.println(myAddress);
+        // String address = peerNetworkId.getAddressByTransportTypeMap().entrySet().stream()
+                // .map(e -> Res.get("user.userProfile.addressByTransport." + e.getKey().name(),
+                        // StringUtils.truncate(e.getValue().getFullAddress(), maxAddressLength)));
         String amountInFiat = AmountFormatter.formatAmount(quoteAmount);
         String currencyAbbreviation = quoteAmount.getCode();
         model.setAmountInFiat(amountInFiat + " " + currencyAbbreviation);
