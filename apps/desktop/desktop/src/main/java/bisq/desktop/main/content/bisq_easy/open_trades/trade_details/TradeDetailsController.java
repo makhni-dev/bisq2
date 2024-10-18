@@ -36,6 +36,7 @@ import bisq.presentation.formatters.PriceFormatter;
 import bisq.trade.bisq_easy.BisqEasyTrade;
 import bisq.trade.bisq_easy.BisqEasyTradeUtils;
 import bisq.user.identity.UserIdentityService;
+import javafx.beans.property.SimpleStringProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -80,7 +81,7 @@ public class TradeDetailsController extends NavigationController
         model.setTradeId(trade.getId());
         model.setMyUsername(channel.getMyUserIdentity().getUserName());
         model.setPeerUsername(channel.getPeer().getUserName());
-        model.setBitcoinPaymentAddress(trade.getBitcoinPaymentData().get());
+        model.setBitcoinPaymentAddress(new SimpleStringProperty(trade.getBitcoinPaymentData().get()));
         model.setMediator(channel.getMediator());
 
         BisqEasyContract contract = trade.getContract();
@@ -106,7 +107,7 @@ public class TradeDetailsController extends NavigationController
         model.setFiatPaymentMethod(fiatPaymentMethod);
 
         String paymentAccountData = trade.getPaymentAccountData().get();
-        model.setPaymentAccountData(paymentAccountData);
+        model.setPaymentAccountData(new SimpleStringProperty(paymentAccountData));
     }
 
     @Override

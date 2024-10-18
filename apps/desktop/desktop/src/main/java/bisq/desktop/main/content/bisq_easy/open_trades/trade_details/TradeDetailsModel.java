@@ -41,7 +41,7 @@ public class TradeDetailsModel extends TabModel {
     private String amountInFiat; 
 
     @Setter
-    private String bitcoinPaymentAddress; 
+    private SimpleStringProperty bitcoinPaymentAddress; 
     @Getter
     private boolean bitcoinPaymentAddressProvided;
     @Setter
@@ -55,7 +55,7 @@ public class TradeDetailsModel extends TabModel {
     @Setter
     private String bitcoinPaymentMethod; 
     @Setter
-    private String paymentAccountData;
+    private SimpleStringProperty paymentAccountData;
     @Getter
     private boolean paymentAccountDataProvided;
     private String mediator; 
@@ -111,20 +111,20 @@ public class TradeDetailsModel extends TabModel {
     }
 
     public SimpleStringProperty getBitcoinPaymentAddress() {
-        if (bitcoinPaymentAddress == null){
+        if (bitcoinPaymentAddress.get() == null){
             bitcoinPaymentAddressProvided = false;
             return new SimpleStringProperty("Not yet provided");
         }
         bitcoinPaymentAddressProvided = true;
-        return new SimpleStringProperty(bitcoinPaymentAddress);
+        return bitcoinPaymentAddress;
     }
     public SimpleStringProperty getPaymentAccountData() {
-        if (paymentAccountData == null){
+        if (paymentAccountData.get() == null) {
             paymentAccountDataProvided = false;
             return new SimpleStringProperty("Not yet provided");
         }
         paymentAccountDataProvided = true;
-        return new SimpleStringProperty(paymentAccountData);
+        return paymentAccountData;
     }
 
 }

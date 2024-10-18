@@ -23,6 +23,7 @@ import bisq.desktop.common.view.NavigationView;
 import bisq.desktop.components.controls.BisqIconButton;
 import bisq.desktop.components.controls.MaterialTextField;
 import bisq.desktop.common.utils.ImageUtil;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -35,6 +36,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.image.ImageView;
 
 import lombok.extern.slf4j.Slf4j;
@@ -161,38 +164,6 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         return area;
     }
 
-    private MaterialTextField createMaterialTextField(String description) {
-        MaterialTextField field = new MaterialTextField(description, null);
-        field.setEditable(false);
-        field.showCopyIcon();
-        field.showIcon();
-
-        allInfoContainer.getChildren().add(field);
-        return field;
-    }
-
-    private HBox createTextBoxLine(String leftText, String rightText) {
-        int LEFT_COLUMN_WIDTH = 100;
-        HBox hbox = new HBox();
-        hbox.setSpacing(10); // Space between columns
-        hbox.setPadding(new Insets(5)); // Padding within each row
-
-        // Left column (fixed width)
-        Label leftLabel = new Label(leftText);
-        leftLabel.setMinWidth(LEFT_COLUMN_WIDTH);
-        leftLabel.setMaxWidth(LEFT_COLUMN_WIDTH);
-        leftLabel.setPrefHeight(40);
-        // hbox.setStyle("-fx-background-color: green;");
-
-        MaterialTextField field = new MaterialTextField(null, null, null, rightText);
-        field.setEditable(false);
-        field.showCopyIcon();
-        HBox.setHgrow(field, Priority.ALWAYS);
-        hbox.getChildren().addAll(leftLabel, field);
-        // Right column (flexible width)
-        return hbox;
-    }
-
     @Override
     protected void onViewAttached() {
         myUsername.textField.textProperty().bind(model.getMyUsername());
@@ -200,19 +171,27 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         tradeId.textField.textProperty().bind(model.getTradeId());
         tradeAmountFiat.textField.textProperty().bind(model.getAmountInFiat());
         bitcoinPaymentAddress.textField.textProperty().bind(model.getBitcoinPaymentAddress());
-        if (!model.isBitcoinPaymentAddressProvided()) {
-            // Make the text less visible for the sake of clarity
-            bitcoinPaymentAddress.textField.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
-        } else {
-            bitcoinPaymentAddress.textField.getTextInputControl().getStyleClass().add("material-text-field");
-        }
         mediator.textField.textProperty().bind(model.getMediator());
-        // if (!model.isMediatorProvided()){
-        // Make the text less visible for the sake of clarity
-        // mediator.textField.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
-        // } else {
-        // mediator.textField.getTextInputControl().getStyleClass().add("material-text-field");
-        // }
+        if (!model.isMediatorProvided()) {
+            mediator.textField.getStyleClass().remove("material-text-field");
+            mediator.textField.getStyleClass().add("material-text-field-low-focus");
+        } else {
+            mediator.textField.getStyleClass().remove("material-text-field-low-focus");
+            mediator.textField.getStyleClass().add("material-text-field");
+        }
+        mediator.textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("VALUE HAS CHANGED");
+                if (!model.isMediatorProvided()) {
+                    mediator.textField.getStyleClass().remove("material-text-field");
+                    mediator.textField.getStyleClass().add("material-text-field-low-focus");
+                } else {
+                    mediator.textField.getStyleClass().remove("material-text-field-low-focus");
+                    mediator.textField.getStyleClass().add("material-text-field");
+                }
+            }
+        });
         marketPrice.textField.textProperty().bind(model.getMarketPrice());
         offerTakenTime.textField.textProperty().bind(model.getOfferTakenDateTime());
         tradeAmountBTC.textField.textProperty().bind(model.getAmountInBTC());
@@ -220,6 +199,65 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         bitcoinPaymentMethod.textField.textProperty().bind(model.getBitcoinPaymentMethod());
 
         paymentAccountData.textField.textProperty().bind(model.getPaymentAccountData());
+        // paymentAccountData.textField.getTextInputControl().getStyleClass()
+        // .add("material-text-field-low-focus");
+        paymentAccountData.textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("VALUE HAS CHANGED");
+                if (!model.isPaymentAccountDataProvided()) {
+                    System.out.println("FIAT NOT PROVIDED");
+                    paymentAccountData.textField.getTextInputControl().getStyleClass().remove("material-text-field");
+                    paymentAccountData.textField.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
+                } else {
+                    System.out.println("FIAT  PROVIDED");
+                    paymentAccountData.textField.getTextInputControl().getStyleClass().remove("material-text-field-low-focus");
+                    paymentAccountData.textField.getTextInputControl().getStyleClass().add("material-text-field");
+                }
+            }
+        });
+        bitcoinPaymentAddress.textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("VALUE HAS CHANGED");
+                if (!model.isBitcoinPaymentAddressProvided()) {
+                    System.out.println("BTC NOT PROVIDED");
+                    bitcoinPaymentAddress.textField.getTextInputControl().getStyleClass().remove("material-text-field");
+                    bitcoinPaymentAddress.textField.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
+                } else {
+                    System.out.println("BTC ADDRESS PROVIDED");
+                    bitcoinPaymentAddress.textField.getTextInputControl().getStyleClass().remove("material-text-field-low-focus");
+                    bitcoinPaymentAddress.textField.getTextInputControl().getStyleClass().add("material-text-field");
+                }
+            }
+        });
+
+        // paymentAccountData.textField.textProperty().addListener(new
+        // ChangeListener<String>() {
+        // @Override
+        // public void changed(ObservableValue<? extends String> observable, String
+        // oldValue, String newValue) {
+        // System.out.println("VALUE HAS CHANGED");
+        // if (!model.isPaymentAccountDataProvided()) {
+        // // Make the text less visible for the sake of clarity
+        // System.out.println("USING LOW FOCUS");
+        // paymentAccountData.textField.getTextInputControl().getStyleClass()
+        // .add("material-text-field-low-focus");
+        // } else {
+        // System.out.println("USING HIGH FOCUS");
+        // paymentAccountData.textField.getTextInputControl().getStyleClass()
+        // .remove("material-text-field-low-focus");
+        // paymentAccountData.textField.getTextInputControl().getStyleClass().add("material-text-field");
+        // }
+        // }
+        // });
+        if (!model.isBitcoinPaymentAddressProvided()) {
+            // Make the text less visible for the sake of clarity
+            bitcoinPaymentAddress.textField.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
+        } else {
+            bitcoinPaymentAddress.textField.getTextInputControl().getStyleClass().add("material-text-field");
+        }
+
         if (!model.isPaymentAccountDataProvided()) {
             // Make the text less visible for the sake of clarity
             paymentAccountData.textField.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
@@ -227,6 +265,22 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
             paymentAccountData.textField.getTextInputControl().getStyleClass().add("material-text-field");
         }
         closeButton.setOnAction(e -> controller.onClose());
+    }
+
+    public void handleTextFieldColorChange(MaterialTextField textField, boolean isProvided) {
+        textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println("VALUE HAS CHANGED");
+                if (!isProvided) {
+                    textField.getStyleClass().remove("material-text-field");
+                    textField.getStyleClass().add("material-text-field-low-focus");
+                } else {
+                    textField.getStyleClass().remove("material-text-field-low-focus");
+                    textField.getStyleClass().add("material-text-field");
+                }
+            }
+        });
     }
 
     @Override
