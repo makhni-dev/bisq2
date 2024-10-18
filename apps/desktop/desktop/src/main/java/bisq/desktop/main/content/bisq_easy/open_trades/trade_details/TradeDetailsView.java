@@ -37,8 +37,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
 import javafx.scene.image.ImageView;
 
-
-
 import lombok.extern.slf4j.Slf4j;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,16 +49,14 @@ import bisq.desktop.components.table.DateTableItem;
 public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsModel, TradeDetailsController> {
 
     private final Button closeButton;
-     private final ScrollPane scrollPane;
+    private final ScrollPane scrollPane;
 
-    // box containing all details
     private final VBox allInfoContainer, informationContainer, detailsContainer;
 
-    private final DetailsTextRow myUsername, peerUsername,tradeId;
+    private final DetailsTextRow myUsername, peerUsername, tradeId;
     private final DetailsTextRow tradeAmountFiat, fiatPaymentMethod;
-    private final DetailsTextRow  bitcoinPaymentMethod, mediator, marketPrice, offerTakenTime;
-    private final DetailsRow tradeAmountBTC,paymentAccountData, bitcoinPaymentAddress;
-    // private final BisqTableView<ListItem> tableView;
+    private final DetailsTextRow bitcoinPaymentMethod, mediator, marketPrice, offerTakenTime;
+    private final DetailsRow tradeAmountBTC, paymentAccountData, bitcoinPaymentAddress;
 
     public TradeDetailsView(TradeDetailsModel model, TradeDetailsController controller) {
         super(new AnchorPane(), model, controller);
@@ -76,7 +72,7 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         allInfoContainer.prefHeightProperty().bind(root.heightProperty());
         allInfoContainer.prefWidthProperty().bind(root.widthProperty());
         root.getChildren().add(scrollPane);
-        
+
         informationContainer = new VBox(5);
         Label headline = new Label("Trade Information");
         headline.getStyleClass().add("bisq-text-headline-2");
@@ -94,8 +90,8 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         tradeAmountBTC = new DetailsRow("Trade amount in BTC");
         bitcoinPaymentAddress = new DetailsRow("Bitcoin payment address");
         paymentAccountData = new DetailsRow("Payment account data");
-        informationContainer.getChildren().addAll(marketPrice, fiatPaymentMethod, 
-            bitcoinPaymentMethod, tradeAmountFiat, tradeAmountBTC, bitcoinPaymentAddress, paymentAccountData);
+        informationContainer.getChildren().addAll(marketPrice, fiatPaymentMethod,
+                bitcoinPaymentMethod, tradeAmountFiat, tradeAmountBTC, bitcoinPaymentAddress, paymentAccountData);
 
         detailsContainer = new VBox(5);
         Label detailsHeadline = new Label("Details");
@@ -113,38 +109,19 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
 
         allInfoContainer.getChildren().addAll(informationContainer, detailsContainer);
 
-        // detailsContainer.getChildren().addAll(tradeId, myUsername, peerUsername, bitcoinPaymentAddress, marketPrice,
-        // offerTakenTime, tradeAmountFiat, tradeAmountBTC, fiat);
-        // paymentAccountData.getTextInputControl().setVisible(false);
-        // paymentAccountData.setHelpText("Not yet provided");
-
-
-        // helpLabel.setManaged(helpLabel.isVisible());
-        // paymentAccountData.getHelpText()(true);
-        // paymentAccountData.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
-        // paymentAccountData.getTextInputControl().getStyleClass().add("material-text-field-read-only");
-
         closeButton = BisqIconButton.createIconButton("close");
         Layout.pinToAnchorPane(closeButton, 16, 20, null, null);
         root.getChildren().add(closeButton);
     }
 
-    private class DetailsRow extends HBox{
+    private class DetailsRow extends HBox {
         TextArea description;
         MaterialTextField textField;
-        public DetailsRow(String description){
-            super();
-            int LEFT_COLUMN_WIDTH = 250;
-            this.setSpacing(20); 
 
-            this.description = new TextArea(description);
-            // this.description.getStyleClass().add("text-color-green");
-            this.description.setMinWidth(LEFT_COLUMN_WIDTH);
-            this.description.setMaxWidth(LEFT_COLUMN_WIDTH);
-            this.description.setPrefHeight(40);
-            this.description.setMinHeight(40);
-            // this.description.getStyleClass().add("material-text-field");
-            // this.description.getStyleClass().add("material-text-field-description-small");
+        public DetailsRow(String description) {
+            super();
+            this.setSpacing(20);
+            this.description = createDescription(description);
 
             textField = new MaterialTextField();
             textField.setEditable(false);
@@ -152,54 +129,53 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
             HBox.setHgrow(textField, Priority.ALWAYS);
             this.getChildren().addAll(this.description, textField);
         }
-
     }
 
     private class DetailsTextRow extends HBox {
         TextArea description;
         TextArea textField;
-        public DetailsTextRow(String description){
-            super();
-            int LEFT_COLUMN_WIDTH = 250;
-            this.setSpacing(20); 
-            ImageView greenDot = ImageUtil.getImageViewById("green-dot");
 
-            this.description = new TextArea(description);
-            // this.description.getStyleClass().add("text-color-green");
-            this.description.setMinWidth(LEFT_COLUMN_WIDTH);
-            this.description.setMaxWidth(LEFT_COLUMN_WIDTH);
-            this.description.setPrefHeight(40);
-            this.description.setMinHeight(40);
-            // this.description.getStyleClass().add("material-text-field-description-small");
+        public DetailsTextRow(String description) {
+            super();
+            this.setSpacing(20);
+            this.description = createDescription(description);
 
             textField = new TextArea();
-            textField.setLayoutX(6.5); 
-            // textField.setLayoutY(3);
             textField.setPrefHeight(40);
             textField.setMinHeight(40);
+            // ensure usage of the same font size as material text field to align text
+            // nicely
             textField.getStyleClass().add("material-text-field-description-big");
             HBox.setHgrow(textField, Priority.ALWAYS);
             this.getChildren().addAll(this.description, textField);
         }
-
-
     }
 
-    private MaterialTextField createMaterialTextField(String description){
+    private TextArea createDescription(String text) {
+        int LEFT_COLUMN_WIDTH = 250;
+        TextArea area = new TextArea(text);
+        area.setMinWidth(LEFT_COLUMN_WIDTH);
+        area.setMaxWidth(LEFT_COLUMN_WIDTH);
+        area.setPrefHeight(40);
+        area.setMinHeight(40);
+        return area;
+    }
+
+    private MaterialTextField createMaterialTextField(String description) {
         MaterialTextField field = new MaterialTextField(description, null);
         field.setEditable(false);
         field.showCopyIcon();
         field.showIcon();
-        
+
         allInfoContainer.getChildren().add(field);
         return field;
     }
 
-    private HBox createTextBoxLine(String leftText, String rightText){
+    private HBox createTextBoxLine(String leftText, String rightText) {
         int LEFT_COLUMN_WIDTH = 100;
         HBox hbox = new HBox();
-        hbox.setSpacing(10);  // Space between columns
-        hbox.setPadding(new Insets(5));  // Padding within each row
+        hbox.setSpacing(10); // Space between columns
+        hbox.setPadding(new Insets(5)); // Padding within each row
 
         // Left column (fixed width)
         Label leftLabel = new Label(leftText);
@@ -224,19 +200,19 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         tradeId.textField.textProperty().bind(model.getTradeId());
         tradeAmountFiat.textField.textProperty().bind(model.getAmountInFiat());
         bitcoinPaymentAddress.textField.textProperty().bind(model.getBitcoinPaymentAddress());
-        if (!model.isBitcoinPaymentAddressProvided()){
+        if (!model.isBitcoinPaymentAddressProvided()) {
             // Make the text less visible for the sake of clarity
             bitcoinPaymentAddress.textField.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
         } else {
             bitcoinPaymentAddress.textField.getTextInputControl().getStyleClass().add("material-text-field");
-        }         
+        }
         mediator.textField.textProperty().bind(model.getMediator());
         // if (!model.isMediatorProvided()){
-            // Make the text less visible for the sake of clarity
-            // mediator.textField.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
+        // Make the text less visible for the sake of clarity
+        // mediator.textField.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
         // } else {
-            // mediator.textField.getTextInputControl().getStyleClass().add("material-text-field");
-        // }         
+        // mediator.textField.getTextInputControl().getStyleClass().add("material-text-field");
+        // }
         marketPrice.textField.textProperty().bind(model.getMarketPrice());
         offerTakenTime.textField.textProperty().bind(model.getOfferTakenDateTime());
         tradeAmountBTC.textField.textProperty().bind(model.getAmountInBTC());
@@ -244,12 +220,12 @@ public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsMod
         bitcoinPaymentMethod.textField.textProperty().bind(model.getBitcoinPaymentMethod());
 
         paymentAccountData.textField.textProperty().bind(model.getPaymentAccountData());
-        if (!model.isPaymentAccountDataProvided()){
+        if (!model.isPaymentAccountDataProvided()) {
             // Make the text less visible for the sake of clarity
             paymentAccountData.textField.getTextInputControl().getStyleClass().add("material-text-field-low-focus");
         } else {
             paymentAccountData.textField.getTextInputControl().getStyleClass().add("material-text-field");
-        }         
+        }
         closeButton.setOnAction(e -> controller.onClose());
     }
 

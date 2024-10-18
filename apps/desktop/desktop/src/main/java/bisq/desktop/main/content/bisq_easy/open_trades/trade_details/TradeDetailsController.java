@@ -42,7 +42,8 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TradeDetailsController extends NavigationController implements InitWithDataController<TradeDetailsController.InitData> {
+public class TradeDetailsController extends NavigationController
+        implements InitWithDataController<TradeDetailsController.InitData> {
     @Getter
     @EqualsAndHashCode
     @ToString
@@ -62,13 +63,11 @@ public class TradeDetailsController extends NavigationController implements Init
     @Getter
     private final TradeDetailsModel model;
 
-    private final ServiceProvider serviceProvider;
     protected final UserIdentityService userIdentityService;
 
     public TradeDetailsController(ServiceProvider serviceProvider) {
         super(NavigationTarget.BISQ_EASY_TRADE_DETAILS);
 
-        this.serviceProvider = serviceProvider;
         userIdentityService = serviceProvider.getUserService().getUserIdentityService();
         model = new TradeDetailsModel();
         view = new TradeDetailsView(model, this);
