@@ -19,48 +19,39 @@ package bisq.desktop.main.content.bisq_easy.open_trades.trade_details;
 
 import bisq.bisq_easy.NavigationTarget;
 import bisq.desktop.common.view.TabModel;
-import bisq.i18n.Res;
 import javafx.beans.property.SimpleStringProperty;
-import lombok.extern.slf4j.Slf4j;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
 public class TradeDetailsModel extends TabModel {
-    @Setter
-    private SimpleStringProperty myUsername, peerUsername, tradeId, amountInFiat;
-    @Setter
-    private SimpleStringProperty bitcoinPaymentAddress, amountInBTC, marketPrice, myRole;
-    @Setter
-    private SimpleStringProperty offerTakenDateTime, fiatPaymentMethod, bitcoinPaymentMethod, paymentAccountData;
-    @Setter
-    private SimpleStringProperty peerNetworkAddress, myNetworkAddress;
+    private final SimpleStringProperty peerUsername = new SimpleStringProperty();
+    private final SimpleStringProperty tradeId = new SimpleStringProperty();
+    private final SimpleStringProperty amountInFiat = new SimpleStringProperty();
+    private final SimpleStringProperty currencyDescription = new SimpleStringProperty();
+    private final SimpleStringProperty bitcoinPaymentAddress = new SimpleStringProperty();
+    private final SimpleStringProperty amountInBTC = new SimpleStringProperty();
+    private final SimpleStringProperty tradePrice = new SimpleStringProperty();
+    private final SimpleStringProperty myRole = new SimpleStringProperty();
+    private final SimpleStringProperty offerTakenDateTime = new SimpleStringProperty();
+    private final SimpleStringProperty fiatPaymentMethod = new SimpleStringProperty();
+    private final SimpleStringProperty bitcoinPaymentMethod = new SimpleStringProperty();
+    private final SimpleStringProperty peerNetworkAddress = new SimpleStringProperty();
+    private final SimpleStringProperty paymentAccountData = new SimpleStringProperty();
+    private final SimpleStringProperty mediator = new SimpleStringProperty();
 
-    @Getter
-    private boolean paymentAccountDataProvided, bitcoinPaymentAddressProvided;
+    @Setter
+    private boolean paymentAccountDataProvided = false;
+    @Setter
+    private boolean bitcoinPaymentAddressProvided = false;
+    @Setter
+    private boolean mediatorProvided = false;
+
 
     @Override
     public NavigationTarget getDefaultNavigationTarget() {
         return NavigationTarget.BISQ_EASY_TRADE_DETAILS;
     }
-
-    public SimpleStringProperty getBitcoinPaymentAddress() {
-        if (bitcoinPaymentAddress.get() == null) {
-            bitcoinPaymentAddressProvided = false;
-            return new SimpleStringProperty(Res.get("bisqEasy.openTrades.tradeDetails.dataNotYetProvided"));
-        }
-        bitcoinPaymentAddressProvided = true;
-        return bitcoinPaymentAddress;
-    }
-
-    public SimpleStringProperty getPaymentAccountData() {
-        if (paymentAccountData.get() == null) {
-            paymentAccountDataProvided = false;
-            return new SimpleStringProperty(Res.get("bisqEasy.openTrades.tradeDetails.dataNotYetProvided"));
-        }
-        paymentAccountDataProvided = true;
-        return paymentAccountData;
-    }
-
 }

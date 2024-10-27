@@ -565,7 +565,7 @@ public class MaterialTextField extends Pane {
     protected double getBgHeight() {
         double height = 56;
         if (StringUtils.isEmpty(descriptionLabel.getText()) && StringUtils.isEmpty(getPromptText())) {
-            height -=  PROMPT_AND_DESCRIPTION_HEIGHT;
+            height -= PROMPT_AND_DESCRIPTION_HEIGHT;
         }
         return height;
     }

@@ -236,6 +236,7 @@ public class TradeStateView extends View<VBox, TradeStateModel, TradeStateContro
         showSellersPriceApprovalOverlayPin.unsubscribe();
 
         cancelButton.setOnAction(null);
+        tradeDetailsButton.setOnAction(null);
         closeTradeButton.setOnAction(null);
         exportButton.setOnAction(null);
         rejectPriceButton.setOnAction(null);
