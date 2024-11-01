@@ -127,9 +127,9 @@ public class TradeDetailsController extends NavigationController
         model.getPeerNetworkAddress().set(peerAddress);
 
         String amountInFiat = AmountFormatter.formatAmount(quoteAmount);
-        String currencyAbbreviation = quoteAmount.getCode();
-        model.getCurrencyDescription().set(Res.get("bisqEasy.openTrades.tradeDetails.amountFiat", currencyAbbreviation));
         model.getAmountInFiat().set(amountInFiat);
+        String currencyAbbreviation = quoteAmount.getCode();
+        model.getCurrency().set(currencyAbbreviation);
 
         long baseSideAmount = contract.getBaseSideAmount();
         Coin amountInBTC = Coin.asBtcFromValue(baseSideAmount);
@@ -145,15 +145,13 @@ public class TradeDetailsController extends NavigationController
         if (StringUtils.isNotEmpty(paymentAccountData)) {
             model.getPaymentAccountData().set(paymentAccountData);
             model.setPaymentAccountDataProvided(true);
-        } else {
-            model.setPaymentAccountDataProvided(false);
-            model.getPaymentAccountData().set(Res.get("bisqEasy.openTrades.tradeDetails.dataNotYetProvided"));
         }
 
-        String myRole = BisqEasyTradeFormatter.getMakerTakerRole(trade);
+        String myMakerTakerRole = BisqEasyTradeFormatter.getMakerTakerRole(trade);
+        model.getMyMakerTakerRole().set(myMakerTakerRole);
         Direction direction = BisqEasyTradeFormatter.getDirectionObject(trade);
-        String buyerSellerRole = direction == Direction.BUY ? Res.get("offer.buying") : Res.get("offer.selling");
-        model.getMyRole().set(myRole + ", " + buyerSellerRole + " BTC");
+        String buyerSellerRole = (direction == Direction.BUY) ? Res.get("bisqEasy.openTrades.tradeOverview.buyBtc") : Res.get("bisqEasy.openTrades.tradeOverview.sellBtc");
+        model.getMySellBuyRole().set(buyerSellerRole);
 
         Optional<UserProfile> mediator = channel.getMediator();
         if (mediator.isPresent()) {

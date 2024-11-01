@@ -1275,3 +1275,44 @@
     -fx-border-radius: 0;
     -fx-border-insets: 0 0 -7.5 0;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * Trade overview                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.trade-overview-headline {
+    -fx-fill: -fx-light-text-color;
+    -fx-text-fill: -fx-light-text-color;
+    -fx-font-size: 2.3em;
+    -fx-font-family: "IBM Plex Sans Light";
+}
+
+.trade-overview-section {
+    -fx-fill: -fx-light-text-color;
+    -fx-text-fill: -fx-light-text-color;
+    -fx-font-size: 1.4em;
+    -fx-font-family: "IBM Plex Sans Light";
+}
+
+.trade-overview-text {
+    -fx-fill: -fx-mid-text-color;
+    -fx-text-fill: -fx-mid-text-color;
+    -fx-font-size: 0.9em;
+    -fx-font-family: "IBM Plex Sans Light";
+}
+
+.trade-overview-value {
+    -fx-fill: -fx-light-text-color;
+    -fx-text-fill: -fx-light-text-color;
+    -fx-font-family: "IBM Plex Sans Light";
+    -fx-font-size: 1.7em;
+}
+
+.trade-overview-currency {
+    -fx-fill: -fx-mid-text-color;
+    -fx-text-fill: -fx-mid-text-color;
+    -fx-font-family: "IBM Plex Sans Light";
+    -fx-font-size: 1.4em;
+}

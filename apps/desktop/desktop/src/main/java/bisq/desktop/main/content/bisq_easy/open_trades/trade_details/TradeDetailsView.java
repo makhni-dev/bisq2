@@ -18,124 +18,264 @@
 package bisq.desktop.main.content.bisq_easy.open_trades.trade_details;
 
 import bisq.desktop.common.Layout;
+import bisq.desktop.common.utils.GridPaneUtil;
 import bisq.desktop.common.view.NavigationView;
+import bisq.desktop.components.containers.Spacer;
 import bisq.desktop.components.controls.BisqIconButton;
 import bisq.desktop.components.controls.MaterialTextField;
 import bisq.desktop.overlay.OverlayModel;
 import bisq.i18n.Res;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TradeDetailsView extends NavigationView<AnchorPane, TradeDetailsModel, TradeDetailsController> {
+public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, TradeDetailsController> {
 
     private static final int ROW_HEIGHT = 40;
     private static final int ROW_SPACING = 10;
+    private final Label headline, tradeInfoHeadline, processHeadline, detailsHeadline,
+            processDescription, myRoleHeadline, amountHeadline, paymentMethodHeadline;
+    private final Text makerTakerRole, buySellRole, tradeAmountBtc, btcPaymentMethod, tradeAmountFiat, currency;
+    private final Text fiatPaymentMethod, btcLabel;
     private final Button closeButton;
-    private final DetailsTextRow peerUsername, tradeId, myRole;
-    private final DetailsTextRow fiatPaymentMethod, peerNetworkAddress;
-    private final DetailsTextRow bitcoinPaymentMethod, tradePrice, offerTakenDateTime;
-    private final DetailsTextRow mediator;
-    private final DetailsRow tradeAmountFiat, tradeAmountBTC, paymentAccountData, bitcoinPaymentAddress;
+    //    private final DetailsTextRow peerUsername, tradeId, myRole;
+//    private final DetailsTextRow fiatPaymentMethod, peerNetworkAddress;
+//    private final DetailsTextRow bitcoinPaymentMethod, tradePrice, offerTakenDateTime;
+//    private final DetailsTextRow mediator;
+//    private final DetailsRow tradeAmountFiat, tradeAmountBTC, paymentAccountData, bitcoinPaymentAddress;
+    MaterialTextField btcPaymentAddress, paymentAccountData;
     VBox allInfoContainer;
 
     public TradeDetailsView(TradeDetailsModel model, TradeDetailsController controller) {
-        super(new AnchorPane(), model, controller);
+        super(new VBox(), model, controller);
 
-        root.setPrefWidth(OverlayModel.WIDTH + 60);
-        root.setPrefHeight(OverlayModel.HEIGHT + 140);
-
-        allInfoContainer = new VBox(40);
-        ScrollPane scrollPane = new ScrollPane(allInfoContainer);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPadding(new Insets(15, 15, 15, 15));
-        allInfoContainer.setPadding(new Insets(30, 30, 30, 30));
-        root.getChildren().add(scrollPane);
-
-        VBox informationContainer = createSectionHeader(Res.get("bisqEasy.openTrades.tradeDetails.informationSection"));
-
-        tradePrice = new DetailsTextRow(Res.get("bisqEasy.openTrades.tradeDetails.tradePrice"));
-        fiatPaymentMethod = new DetailsTextRow(Res.get("bisqEasy.openTrades.tradeDetails.fiatPaymentMethod"));
-        bitcoinPaymentMethod = new DetailsTextRow(Res.get("bisqEasy.openTrades.tradeDetails.btcPaymentMethod"));
-        tradeAmountFiat = new DetailsRow("");
-        tradeAmountBTC = new DetailsRow(Res.get("bisqEasy.openTrades.table.baseAmount"));
-        myRole = new DetailsTextRow(Res.get("bisqEasy.openTrades.table.makerTakerRole"));
-        informationContainer.getChildren().addAll(myRole, tradePrice, fiatPaymentMethod, bitcoinPaymentMethod, tradeAmountFiat, tradeAmountBTC);
-
-        VBox processInformation = createSectionHeader(Res.get("bisqEasy.openTrades.tradeDetails.processSection"));
-        bitcoinPaymentAddress = new DetailsRow(Res.get("bisqEasy.openTrades.tradeDetails.btcPaymentAddress"));
-        paymentAccountData = new DetailsRow(Res.get("bisqEasy.openTrades.tradeDetails.paymentAccountData"));
-        processInformation.getChildren().addAll(bitcoinPaymentAddress, paymentAccountData);
-
-        VBox detailsContainer = createSectionHeader(Res.get("bisqEasy.openTrades.tradeDetails.detailsSection"));
-        tradeId = new DetailsTextRow(Res.get("bisqEasy.openTrades.table.tradeId"));
-        peerUsername = new DetailsTextRow(Res.get("bisqEasy.openTrades.tradeDetails.peerUsername"));
-        offerTakenDateTime = new DetailsTextRow(Res.get("bisqEasy.openTrades.tradeDetails.offerTakenDate"));
-        peerNetworkAddress = new DetailsTextRow(Res.get("bisqEasy.openTrades.tradeDetails.peerNetworkAddress"));
-        mediator = new DetailsTextRow(Res.get("bisqEasy.openTrades.tradeDetails.selectedMediator"));
-        detailsContainer.getChildren().addAll(tradeId, offerTakenDateTime, peerUsername, peerNetworkAddress, mediator);
-
-        allInfoContainer.getChildren().addAll(informationContainer, processInformation, detailsContainer);
-
+        root.setPrefWidth(OverlayModel.WIDTH);
+        root.setPrefHeight(OverlayModel.HEIGHT);
         closeButton = BisqIconButton.createIconButton("close");
-        Layout.pinToAnchorPane(closeButton, 16, 18, null, null);
-        root.getChildren().add(closeButton);
+        HBox firstRow = new HBox(Spacer.fillHBox(), closeButton);
+        firstRow.setPadding(new Insets(10, 20, 0, 20));
+        root.getChildren().add(firstRow);
+
+        int numColumns = 3;
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setMouseTransparent(true);
+        GridPaneUtil.setGridPaneMultiColumnsConstraints(gridPane, numColumns);
+
+        int rowIndex = 0;
+        headline = createLabel("trade-overview-headline");
+        GridPane.setHalignment(headline, HPos.CENTER);
+        GridPane.setMargin(headline, new Insets(10, 0, 30, 0));
+        GridPane.setColumnSpan(headline, numColumns);
+        gridPane.add(headline, 0, rowIndex);
+
+        // overview
+        rowIndex++;
+        tradeInfoHeadline = createLabel("trade-overview-section");
+        GridPane.setColumnSpan(tradeInfoHeadline, numColumns);
+        gridPane.add(tradeInfoHeadline, 0, rowIndex);
+
+        rowIndex++;
+        Region line1 = getLine();
+        GridPane.setColumnSpan(line1, numColumns);
+        gridPane.add(line1, 0, rowIndex);
+
+        rowIndex++;
+        myRoleHeadline = createLabel("trade-overview-text");
+        gridPane.add(myRoleHeadline, 0, rowIndex);
+        amountHeadline = createLabel("trade-overview-text");
+        gridPane.add(amountHeadline, 1, rowIndex);
+        paymentMethodHeadline = createLabel("trade-overview-text");
+        gridPane.add(paymentMethodHeadline, 2, rowIndex);
+
+        rowIndex++;
+        makerTakerRole = createText("trade-overview-value");
+        gridPane.add(makerTakerRole, 0, rowIndex);
+        tradeAmountFiat = createText("trade-overview-value");
+        HBox.setMargin(tradeAmountFiat, new Insets(0.5, 0, 0, 0));
+        currency = createText("trade-overview-currency");
+        HBox fiatText = new HBox(5, tradeAmountFiat, currency);
+        fiatText.setAlignment(Pos.BASELINE_LEFT);
+        gridPane.add(fiatText, 1, rowIndex);
+        fiatPaymentMethod = createText("trade-overview-value");
+        gridPane.add(fiatPaymentMethod, 2, rowIndex);
+
+        rowIndex++;
+        buySellRole = createText("trade-overview-value");
+        gridPane.add(buySellRole, 0, rowIndex);
+        tradeAmountBtc = createText("trade-overview-value");
+        btcLabel = createText("trade-overview-currency");
+        HBox btcText = new HBox(5, tradeAmountBtc, btcLabel);
+        btcText.setAlignment(Pos.BASELINE_LEFT);
+        gridPane.add(btcText, 1, rowIndex);
+        btcPaymentMethod = createText("trade-overview-value");
+        gridPane.add(btcPaymentMethod, 2, rowIndex);
+
+        rowIndex++;
+        Region emptyRow1 = new Region();
+        GridPane.setColumnSpan(emptyRow1, numColumns);
+        emptyRow1.setPrefHeight(40);
+        gridPane.add(emptyRow1, 0, rowIndex);
+
+        // process
+        rowIndex++;
+        processHeadline = createLabel("trade-overview-section");
+        GridPane.setColumnSpan(processHeadline, numColumns);
+        gridPane.add(processHeadline, 0, rowIndex);
+        rowIndex++;
+        processDescription = createLabel("trade-overview-text");
+        processDescription.setPadding(new Insets(-10, 0, 0, 0));
+        GridPane.setColumnSpan(processDescription, numColumns);
+        gridPane.add(processDescription, 0, rowIndex);
+        rowIndex++;
+        Region line2 = getLine();
+        GridPane.setColumnSpan(line2, numColumns);
+        gridPane.add(line2, 0, rowIndex);
+        rowIndex++;
+        btcPaymentAddress = new MaterialTextField(Res.get("bisqEasy.openTrades.tradeOverview.btcPaymentAddress"));
+        btcPaymentAddress.setEditable(false);
+        btcPaymentAddress.showCopyIcon();
+        GridPane.setColumnSpan(btcPaymentAddress, numColumns);
+        gridPane.add(btcPaymentAddress, 0, rowIndex);
+        rowIndex++;
+        paymentAccountData = new MaterialTextField(Res.get("bisqEasy.openTrades.tradeOverview.paymentAccountData"));
+        paymentAccountData.setEditable(false);
+        paymentAccountData.showCopyIcon();
+        GridPane.setColumnSpan(paymentAccountData, numColumns);
+        gridPane.add(paymentAccountData, 0, rowIndex);
+
+        // details
+        rowIndex++;
+        detailsHeadline = createLabel("trade-overview-section");
+        GridPane.setColumnSpan(detailsHeadline, numColumns);
+        gridPane.add(detailsHeadline, 0, rowIndex);
+        rowIndex++;
+        Region line3 = getLine();
+        GridPane.setColumnSpan(line3, numColumns);
+        gridPane.add(line3, 0, rowIndex);
+
+//        ColumnConstraints column1 = new ColumnConstraints();
+//        column1.setPercentWidth(25);
+//        ColumnConstraints column2 = new ColumnConstraints();
+//        column2.setPercentWidth(30);
+//        ColumnConstraints column3 = new ColumnConstraints();
+//        column2.setPercentWidth(45);
+//        gridPane.getColumnConstraints().addAll(column1, column2, column3);
+        gridPane.setPadding(new Insets(10, 40, 10, 20));
+        ScrollPane scrollPane = new ScrollPane(gridPane);
+        scrollPane.setFitToWidth(true);
+        VBox container = new VBox(scrollPane);
+        container.setPadding(new Insets(10, 22, 10, 20));
+        root.getChildren().addAll(container);
     }
 
     @Override
     protected void onViewAttached() {
-        allInfoContainer.prefHeightProperty().bind(root.heightProperty());
-        allInfoContainer.prefWidthProperty().bind(root.widthProperty());
+        headline.setText(Res.get("bisqEasy.openTrades.tradeOverview.headline"));
+        tradeInfoHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.informationSection"));
+        processHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.processSection"));
+        detailsHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.detailsSection"));
+        myRoleHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.myRole"));
+        amountHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.amount"));
+        paymentMethodHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.paymentMethod"));
+        processDescription.setText(Res.get("bisqEasy.openTrades.tradeOverview.processDescription"));
+        btcLabel.setText("BTC");
 
-        peerUsername.textField.textProperty().bind(model.getPeerUsername());
-        tradeId.textField.textProperty().bind(model.getTradeId());
-        tradeAmountFiat.description.textProperty().bind(model.getCurrencyDescription());
-        tradeAmountFiat.textField.textProperty().bind(model.getAmountInFiat());
-        bitcoinPaymentAddress.textField.textProperty().bind(model.getBitcoinPaymentAddress());
-
-        tradePrice.textField.textProperty().bind(model.getTradePrice());
-        offerTakenDateTime.textField.textProperty().bind(model.getOfferTakenDateTime());
-        tradeAmountBTC.textField.textProperty().bind(model.getAmountInBTC());
-        fiatPaymentMethod.textField.textProperty().bind(model.getFiatPaymentMethod());
-        bitcoinPaymentMethod.textField.textProperty().bind(model.getBitcoinPaymentMethod());
-
-        paymentAccountData.textField.textProperty().bind(model.getPaymentAccountData());
-        myRole.textField.textProperty().bind(model.getMyRole());
-        peerNetworkAddress.textField.textProperty().bind(model.getPeerNetworkAddress());
-        mediator.textField.textProperty().bind(model.getMediator());
-
-        applyDarkTextColorIfNotProvided(bitcoinPaymentAddress.textField.getTextInputControl(), !model.isBitcoinPaymentAddressProvided());
-        applyDarkTextColorIfNotProvided(paymentAccountData.textField.getTextInputControl(), !model.isPaymentAccountDataProvided());
-        applyDarkTextColorIfNotProvided(mediator.textField, !model.isMediatorProvided());
+        buySellRole.textProperty().bind(model.getMySellBuyRole());
+        makerTakerRole.textProperty().bind(model.getMyMakerTakerRole());
+        tradeAmountFiat.textProperty().bind(model.getAmountInFiat());
+        currency.textProperty().bind(model.getCurrency());
+        tradeAmountBtc.textProperty().bind(model.getAmountInBTC());
+        btcPaymentMethod.textProperty().bind(model.getBitcoinPaymentMethod());
+        fiatPaymentMethod.textProperty().bind(model.getFiatPaymentMethod());
+        btcPaymentAddress.textProperty().bind(model.getBitcoinPaymentAddress());
+        paymentAccountData.textProperty().bind(model.getPaymentAccountData());
+        //   allInfoContainer.prefHeightProperty().bind(root.heightProperty());
+        //   allInfoContainer.prefWidthProperty().bind(root.widthProperty());
+//        peerUsername.textField.textProperty().bind(model.getPeerUsername());
+//        tradeId.textField.textProperty().bind(model.getTradeId());
+//        tradeAmountFiat.description.textProperty().bind(model.getCurrencyDescription());
+//        tradeAmountFiat.textField.textProperty().bind(model.getAmountInFiat());
+//        bitcoinPaymentAddress.textField.textProperty().bind(model.getBitcoinPaymentAddress());
+//
+//        tradePrice.textField.textProperty().bind(model.getTradePrice());
+//        offerTakenDateTime.textField.textProperty().bind(model.getOfferTakenDateTime());
+//        tradeAmountBTC.textField.textProperty().bind(model.getAmountInBTC());
+//        fiatPaymentMethod.textField.textProperty().bind(model.getFiatPaymentMethod());
+//        bitcoinPaymentMethod.textField.textProperty().bind(model.getBitcoinPaymentMethod());
+//
+//        paymentAccountData.textField.textProperty().bind(model.getPaymentAccountData());
+//        myRole.textField.textProperty().bind(model.getMyRole());
+//        peerNetworkAddress.textField.textProperty().bind(model.getPeerNetworkAddress());
+//        mediator.textField.textProperty().bind(model.getMediator());
+//
+//        applyDarkTextColorIfNotProvided(bitcoinPaymentAddress.textField.getTextInputControl(), !model.isBitcoinPaymentAddressProvided());
+//        applyDarkTextColorIfNotProvided(paymentAccountData.textField.getTextInputControl(), !model.isPaymentAccountDataProvided());
+//        applyDarkTextColorIfNotProvided(mediator.textField, !model.isMediatorProvided());
 
         closeButton.setOnAction(e -> controller.onClose());
     }
 
     @Override
     protected void onViewDetached() {
-        allInfoContainer.prefHeightProperty().unbind();
-        allInfoContainer.prefWidthProperty().unbind();
+        buySellRole.textProperty().unbind();
+        makerTakerRole.textProperty().unbind();
+        tradeAmountFiat.textProperty().unbind();
+        currency.textProperty().unbind();
+        tradeAmountBtc.textProperty().unbind();
+        btcPaymentMethod.textProperty().unbind();
+        fiatPaymentMethod.textProperty().unbind();
+        btcPaymentAddress.textProperty().unbind();
+        paymentAccountData.textProperty().unbind();
+        //   allInfoContainer.prefHeightProperty().unbind();
+        //   allInfoContainer.prefWidthProperty().unbind();
 
-        peerUsername.textField.textProperty().unbind();
-        tradeId.textField.textProperty().unbind();
-        tradeAmountFiat.description.textProperty().unbind();
-        tradeAmountFiat.textField.textProperty().unbind();
-        bitcoinPaymentAddress.textField.textProperty().unbind();
+        //     peerUsername.textField.textProperty().unbind();
+        //     tradeId.textField.textProperty().unbind();
+        //     tradeAmountFiat.description.textProperty().unbind();
+        //     tradeAmountFiat.textField.textProperty().unbind();
+        //     bitcoinPaymentAddress.textField.textProperty().unbind();
 
-        tradePrice.textField.textProperty().unbind();
-        offerTakenDateTime.textField.textProperty().unbind();
-        tradeAmountBTC.textField.textProperty().unbind();
-        fiatPaymentMethod.textField.textProperty().unbind();
-        bitcoinPaymentMethod.textField.textProperty().unbind();
+        //     tradePrice.textField.textProperty().unbind();
+        //     offerTakenDateTime.textField.textProperty().unbind();
+        //     tradeAmountBTC.textField.textProperty().unbind();
+        //     fiatPaymentMethod.textField.textProperty().unbind();
+        //     bitcoinPaymentMethod.textField.textProperty().unbind();
 
-        paymentAccountData.textField.textProperty().unbind();
-        myRole.textField.textProperty().unbind();
-        peerNetworkAddress.textField.textProperty().unbind();
-        mediator.textField.textProperty().unbind();
+        //     paymentAccountData.textField.textProperty().unbind();
+        //     myRole.textField.textProperty().unbind();
+        //     peerNetworkAddress.textField.textProperty().unbind();
+        //     mediator.textField.textProperty().unbind();
 
         closeButton.setOnAction(null);
+    }
+
+    private Label createLabel(String style) {
+        Label label = new Label();
+        label.getStyleClass().add(style);
+        return label;
+    }
+
+    private Text createText(String style) {
+        Text text = new Text();
+        text.getStyleClass().add(style);
+        return text;
+    }
+
+    // copied from TradeWizardReviewView
+    private Region getLine() {
+        Region line = new Region();
+        line.setMinHeight(1);
+        line.setMaxHeight(1);
+        line.setStyle("-fx-background-color: -bisq-border-color-grey");
+        line.setPadding(new Insets(9, 0, 8, 0));
+        return line;
     }
 
     private VBox createSectionHeader(String headlineText) {

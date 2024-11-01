@@ -30,11 +30,12 @@ public class TradeDetailsModel extends TabModel {
     private final SimpleStringProperty peerUsername = new SimpleStringProperty();
     private final SimpleStringProperty tradeId = new SimpleStringProperty();
     private final SimpleStringProperty amountInFiat = new SimpleStringProperty();
-    private final SimpleStringProperty currencyDescription = new SimpleStringProperty();
+    private final SimpleStringProperty currency = new SimpleStringProperty();
     private final SimpleStringProperty bitcoinPaymentAddress = new SimpleStringProperty();
     private final SimpleStringProperty amountInBTC = new SimpleStringProperty();
     private final SimpleStringProperty tradePrice = new SimpleStringProperty();
-    private final SimpleStringProperty myRole = new SimpleStringProperty();
+    private final SimpleStringProperty mySellBuyRole = new SimpleStringProperty();
+    private final SimpleStringProperty myMakerTakerRole = new SimpleStringProperty();
     private final SimpleStringProperty offerTakenDateTime = new SimpleStringProperty();
     private final SimpleStringProperty fiatPaymentMethod = new SimpleStringProperty();
     private final SimpleStringProperty bitcoinPaymentMethod = new SimpleStringProperty();
