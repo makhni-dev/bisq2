@@ -73,8 +73,8 @@ public class DropdownMenu extends HBox {
         buttonIcon = defaultIcon;
 
         getChildren().addAll(hBox, buttonIcon);
-        hBox.setAlignment(Pos.BASELINE_LEFT);
         hBox.getStyleClass().add("dropdown-menu-content-hbox");
+        hBox.setAlignment(Pos.BASELINE_LEFT);
 
         getStyleClass().add("dropdown-menu");
         contextMenu.getStyleClass().add("dropdown-menu-popup");
