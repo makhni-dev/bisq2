@@ -1316,3 +1316,8 @@
     -fx-font-family: "IBM Plex Sans Light";
     -fx-font-size: 1.4em;
 }
+
+.trade-overview-top-row {
+    -fx-background-color: -bisq-dark-grey-20;
+    -fx-pref-height: 50;
+}

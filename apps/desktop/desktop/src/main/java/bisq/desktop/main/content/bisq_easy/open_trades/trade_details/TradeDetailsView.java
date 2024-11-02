@@ -38,10 +38,10 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
 
     private static final int ROW_HEIGHT = 40;
     private static final int ROW_SPACING = 10;
-    private final Label headline, tradeInfoHeadline, processHeadline, detailsHeadline,
-            processDescription, myRoleHeadline, amountHeadline, paymentMethodHeadline;
+    private final Label headline, processHeadline, processDescription, myRoleHeadline, amountHeadline, paymentMethodHeadline;
+    private final Label tradePriceLabel, tradeIdLabel;
     private final Text makerTakerRole, buySellRole, tradeAmountBtc, btcPaymentMethod, tradeAmountFiat, currency;
-    private final Text fiatPaymentMethod, btcLabel;
+    private final Text fiatPaymentMethod, btcLabel, tradePriceAmount, tradeId;
     private final Button closeButton;
     //    private final DetailsTextRow peerUsername, tradeId, myRole;
 //    private final DetailsTextRow fiatPaymentMethod, peerNetworkAddress;
@@ -57,10 +57,22 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         root.setPrefWidth(OverlayModel.WIDTH);
         root.setPrefHeight(OverlayModel.HEIGHT);
         closeButton = BisqIconButton.createIconButton("close");
-        HBox firstRow = new HBox(Spacer.fillHBox(), closeButton);
-        firstRow.setPadding(new Insets(10, 20, 0, 20));
-        root.getChildren().add(firstRow);
+        HBox closeButtonRow = new HBox(Spacer.fillHBox(), closeButton);
+        closeButtonRow.setPadding(new Insets(0, 10, 0, 10));
+        closeButtonRow.getStyleClass().add("trade-overview-top-row");
+        closeButtonRow.setAlignment(Pos.CENTER_RIGHT);
+        root.getChildren().add(closeButtonRow);
 
+        Region emptySpace = new Region();
+        emptySpace.setPrefHeight(30);
+        headline = createLabel("trade-overview-headline");
+        VBox headlineBox = new VBox(5, emptySpace, headline);
+        headlineBox.setAlignment(Pos.CENTER);
+        Region line1 = getLine();
+        headlineBox.getChildren().add(line1);
+        root.getChildren().add(headlineBox);
+
+        // overview
         int numColumns = 3;
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
@@ -69,24 +81,6 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         GridPaneUtil.setGridPaneMultiColumnsConstraints(gridPane, numColumns);
 
         int rowIndex = 0;
-        headline = createLabel("trade-overview-headline");
-        GridPane.setHalignment(headline, HPos.CENTER);
-        GridPane.setMargin(headline, new Insets(10, 0, 30, 0));
-        GridPane.setColumnSpan(headline, numColumns);
-        gridPane.add(headline, 0, rowIndex);
-
-        // overview
-        rowIndex++;
-        tradeInfoHeadline = createLabel("trade-overview-section");
-        GridPane.setColumnSpan(tradeInfoHeadline, numColumns);
-        gridPane.add(tradeInfoHeadline, 0, rowIndex);
-
-        rowIndex++;
-        Region line1 = getLine();
-        GridPane.setColumnSpan(line1, numColumns);
-        gridPane.add(line1, 0, rowIndex);
-
-        rowIndex++;
         myRoleHeadline = createLabel("trade-overview-text");
         gridPane.add(myRoleHeadline, 0, rowIndex);
         amountHeadline = createLabel("trade-overview-text");
@@ -122,8 +116,31 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         GridPane.setColumnSpan(emptyRow1, numColumns);
         emptyRow1.setPrefHeight(40);
         gridPane.add(emptyRow1, 0, rowIndex);
+        rowIndex++;
+        Region line3 = getLine();
+        GridPane.setColumnSpan(line3, numColumns);
+        gridPane.add(line3, 0, rowIndex);
+
+        rowIndex++;
+        tradePriceLabel = createLabel("trade-overview-text");
+//        gridPane.add(tradePriceLabel, 0, rowIndex);
+        // change style
+        tradePriceAmount = createText("trade-overview-section");
+//        gridPane.add(tradePriceAmount, 1, rowIndex, 2, 1);
+        rowIndex++;
+        tradeIdLabel = createLabel("trade-overview-text");
+//        gridPane.add(tradeIdLabel, 0, rowIndex);
+        // change style
+        tradeId = createText("trade-overview-section");
+//        gridPane.add(tradeId, 1, rowIndex, 2, 1);
+
 
         // process
+        rowIndex++;
+        Region emptyRow2 = new Region();
+        GridPane.setColumnSpan(emptyRow2, numColumns);
+        emptyRow2.setPrefHeight(40);
+        gridPane.add(emptyRow2, 0, rowIndex);
         rowIndex++;
         processHeadline = createLabel("trade-overview-section");
         GridPane.setColumnSpan(processHeadline, numColumns);
@@ -150,16 +167,6 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         GridPane.setColumnSpan(paymentAccountData, numColumns);
         gridPane.add(paymentAccountData, 0, rowIndex);
 
-        // details
-        rowIndex++;
-        detailsHeadline = createLabel("trade-overview-section");
-        GridPane.setColumnSpan(detailsHeadline, numColumns);
-        gridPane.add(detailsHeadline, 0, rowIndex);
-        rowIndex++;
-        Region line3 = getLine();
-        GridPane.setColumnSpan(line3, numColumns);
-        gridPane.add(line3, 0, rowIndex);
-
 //        ColumnConstraints column1 = new ColumnConstraints();
 //        column1.setPercentWidth(25);
 //        ColumnConstraints column2 = new ColumnConstraints();
@@ -178,14 +185,14 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
     @Override
     protected void onViewAttached() {
         headline.setText(Res.get("bisqEasy.openTrades.tradeOverview.headline"));
-        tradeInfoHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.informationSection"));
         processHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.processSection"));
-        detailsHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.detailsSection"));
         myRoleHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.myRole"));
         amountHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.amount"));
         paymentMethodHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.paymentMethod"));
         processDescription.setText(Res.get("bisqEasy.openTrades.tradeOverview.processDescription"));
         btcLabel.setText("BTC");
+        tradePriceLabel.setText(Res.get("bisqEasy.openTrades.tradeOverview.tradePrice"));
+        tradeIdLabel.setText(Res.get("bisqEasy.openTrades.table.tradeId"));
 
         buySellRole.textProperty().bind(model.getMySellBuyRole());
         makerTakerRole.textProperty().bind(model.getMyMakerTakerRole());
@@ -196,6 +203,8 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         fiatPaymentMethod.textProperty().bind(model.getFiatPaymentMethod());
         btcPaymentAddress.textProperty().bind(model.getBitcoinPaymentAddress());
         paymentAccountData.textProperty().bind(model.getPaymentAccountData());
+        tradePriceAmount.textProperty().bind(model.getTradePrice());
+        tradeId.textProperty().bind(model.getTradeId());
         //   allInfoContainer.prefHeightProperty().bind(root.heightProperty());
         //   allInfoContainer.prefWidthProperty().bind(root.widthProperty());
 //        peerUsername.textField.textProperty().bind(model.getPeerUsername());
@@ -233,6 +242,8 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         fiatPaymentMethod.textProperty().unbind();
         btcPaymentAddress.textProperty().unbind();
         paymentAccountData.textProperty().unbind();
+        tradePriceAmount.textProperty().unbind();
+        tradeId.textProperty().unbind();
         //   allInfoContainer.prefHeightProperty().unbind();
         //   allInfoContainer.prefWidthProperty().unbind();
 
