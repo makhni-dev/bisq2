@@ -63,8 +63,7 @@ public class TradeStateView extends View<VBox, TradeStateModel, TradeStateContro
         cancelButton.getStyleClass().add("outlined-button");
 
         ImageView greenInfoIcon = ImageUtil.getImageViewById("icon-info-green");
-        tradeDetailsButton = BisqIconButton.createIconButton(greenInfoIcon,
-                Res.get("bisqEasy.openTrades.tradeDetails.open"));
+        tradeDetailsButton = BisqIconButton.createIconButton(greenInfoIcon, Res.get("bisqEasy.openTrades.tradeDetails.open"));
 
         tradeDataHeader.getChildren().addAll(tradeDetailsButton, Spacer.fillHBox(), cancelButton);
         tradeDataHeaderBox = new VBox(tradeDataHeader, Layout.hLine());

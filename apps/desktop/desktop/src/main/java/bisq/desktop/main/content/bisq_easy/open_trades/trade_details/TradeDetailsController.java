@@ -83,8 +83,8 @@ public class TradeDetailsController extends NavigationController
             case FloatPriceSpec floatPriceSpec -> {
                 String absPercent = PercentageFormatter.formatToPercentWithSymbol(Math.abs(floatPriceSpec.getPercentage()));
                 priceSpecStr = Res.get(floatPriceSpec.getPercentage() >= 0
-                        ? "bisqEasy.tradeWizard.review.chatMessage.floatPrice.above"
-                        : "bisqEasy.tradeWizard.review.chatMessage.floatPrice.below", absPercent);
+                        ? "bisqEasy.openTrades.tradeDetails.aboveMarketPrice"
+                        : "bisqEasy.openTrades.tradeDetails.belowMarketPrice", absPercent);
             }
             case FixPriceSpec fixPriceSpec -> priceSpecStr = Res.get("bisqEasy.openTrades.tradeDetails.fixedPrice");
             case null, default -> {

@@ -1282,42 +1282,42 @@
  *                                                                             *
  ******************************************************************************/
 
-.trade-overview-headline {
+.trade-details-headline {
     -fx-fill: -fx-light-text-color;
     -fx-text-fill: -fx-light-text-color;
     -fx-font-size: 2.3em;
     -fx-font-family: "IBM Plex Sans Light";
 }
 
-.trade-overview-section {
+.trade-details-medium-light {
     -fx-fill: -fx-light-text-color;
     -fx-text-fill: -fx-light-text-color;
     -fx-font-size: 1.4em;
     -fx-font-family: "IBM Plex Sans Light";
 }
 
-.trade-overview-text {
+.trade-details-small-grey {
     -fx-fill: -fx-mid-text-color;
     -fx-text-fill: -fx-mid-text-color;
     -fx-font-size: 0.9em;
     -fx-font-family: "IBM Plex Sans Light";
 }
 
-.trade-overview-value {
+.trade-details-large-light {
     -fx-fill: -fx-light-text-color;
     -fx-text-fill: -fx-light-text-color;
     -fx-font-family: "IBM Plex Sans Light";
     -fx-font-size: 1.7em;
 }
 
-.trade-overview-currency {
+.trade-details-medium-grey {
     -fx-fill: -fx-mid-text-color;
     -fx-text-fill: -fx-mid-text-color;
     -fx-font-family: "IBM Plex Sans Light";
-    -fx-font-size: 1.4em;
+    -fx-font-size: 1.3em;
 }
 
-.trade-overview-top-row {
+.trade-details-close-button-row {
     -fx-background-color: -bisq-dark-grey-20;
     -fx-min-height: 50;
     -fx-max-height: 50;

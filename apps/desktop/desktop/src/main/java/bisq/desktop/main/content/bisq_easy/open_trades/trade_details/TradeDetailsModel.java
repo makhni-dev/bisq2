@@ -18,14 +18,14 @@
 package bisq.desktop.main.content.bisq_easy.open_trades.trade_details;
 
 import bisq.bisq_easy.NavigationTarget;
-import bisq.desktop.common.view.TabModel;
+import bisq.desktop.common.view.NavigationModel;
 import javafx.beans.property.SimpleStringProperty;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
-public class TradeDetailsModel extends TabModel {
+public class TradeDetailsModel extends NavigationModel {
     private final SimpleStringProperty peerUsername = new SimpleStringProperty();
     private final SimpleStringProperty tradeId = new SimpleStringProperty();
     private final SimpleStringProperty amountInFiat = new SimpleStringProperty();

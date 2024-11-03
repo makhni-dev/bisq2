@@ -560,27 +560,16 @@ public class MaterialTextField extends Pane {
                 textInputControl.isFocused();
     }
 
-    private static final int PROMPT_AND_DESCRIPTION_HEIGHT = 16;
-
     protected double getBgHeight() {
-        double height = 56;
-        if (StringUtils.isEmpty(descriptionLabel.getText()) && StringUtils.isEmpty(getPromptText())) {
-            height -= PROMPT_AND_DESCRIPTION_HEIGHT;
-        }
-        return height;
+        return 56;
     }
 
     protected double getFieldLayoutY() {
-        double fieldY = 19;
-        if (StringUtils.isEmpty(descriptionLabel.getText()) && StringUtils.isEmpty(getPromptText())) {
-            fieldY -= PROMPT_AND_DESCRIPTION_HEIGHT;
-        }
-        return fieldY;
+        return 19;
     }
 
     @Override
     protected double computeMinHeight(double width) {
-        doLayout();
         if (helpLabel.isManaged()) {
             return helpLabel.getLayoutY() + helpLabel.getHeight();
         } else if (errorLabel.isManaged()) {
