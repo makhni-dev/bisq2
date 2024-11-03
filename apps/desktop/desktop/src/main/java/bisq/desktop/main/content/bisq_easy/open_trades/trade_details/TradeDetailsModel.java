@@ -21,7 +21,6 @@ import bisq.bisq_easy.NavigationTarget;
 import bisq.desktop.common.view.TabModel;
 import javafx.beans.property.SimpleStringProperty;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -43,14 +42,6 @@ public class TradeDetailsModel extends TabModel {
     private final SimpleStringProperty peerNetworkAddress = new SimpleStringProperty();
     private final SimpleStringProperty paymentAccountData = new SimpleStringProperty();
     private final SimpleStringProperty mediator = new SimpleStringProperty();
-
-    @Setter
-    private boolean paymentAccountDataProvided = false;
-    @Setter
-    private boolean bitcoinPaymentAddressProvided = false;
-    @Setter
-    private boolean mediatorProvided = false;
-
 
     @Override
     public NavigationTarget getDefaultNavigationTarget() {

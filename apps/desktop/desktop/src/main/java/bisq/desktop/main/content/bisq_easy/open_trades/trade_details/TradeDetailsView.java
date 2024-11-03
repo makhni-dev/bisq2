@@ -21,6 +21,7 @@ import bisq.desktop.common.utils.GridPaneUtil;
 import bisq.desktop.common.view.NavigationView;
 import bisq.desktop.components.containers.Spacer;
 import bisq.desktop.components.controls.BisqIconButton;
+import bisq.desktop.components.controls.CopyOnClickLabel;
 import bisq.desktop.components.controls.MaterialTextField;
 import bisq.desktop.overlay.OverlayModel;
 import bisq.i18n.Res;
@@ -41,8 +42,9 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
 
     private final Label headline, processHeadline, processDescription, myRoleLabel, amountLabel, paymentMethodLabel;
     private final Label tradePriceLabel, tradeIdLabel, peerUsernameLabel, dateLabel, mediatorLabel, peerNetworkAddressLabel;
-    private final Text makerTakerRole, buySellRole, tradeAmountBtc, btcPaymentMethod, tradeAmountFiat, currency;
-    private final Text fiatPaymentMethod, btcLabel, tradePriceAmount, tradeId, priceSpec, peerUsername, tradeDate, mediator, peerNetworkAddress;
+    private final CopyOnClickLabel tradeAmountFiat, tradeAmountBtc, tradeId;
+    private final Text makerTakerRole, buySellRole, btcPaymentMethod, currency, fiatPaymentMethod, btcLabel;
+    private final Text tradePriceAmount, priceSpec, peerUsername, tradeDate, mediator, peerNetworkAddress;
     private final Button closeButton;
     MaterialTextField btcPaymentAddress, paymentAccountData;
 
@@ -72,11 +74,10 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
-        gridPane.setMouseTransparent(true);
         GridPaneUtil.setGridPaneMultiColumnsConstraints(gridPane, numColumns);
 
         int rowIndex = 0;
-        Insets topInset = new Insets(0,0,-14,0);
+        Insets topInset = new Insets(0, 0, -14, 0);
         myRoleLabel = createLabel("trade-overview-text");
         GridPane.setMargin(myRoleLabel, topInset);
         gridPane.add(myRoleLabel, 0, rowIndex);
@@ -90,7 +91,7 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         rowIndex++;
         makerTakerRole = createText("trade-overview-value");
         gridPane.add(makerTakerRole, 0, rowIndex);
-        tradeAmountFiat = createText("trade-overview-value");
+        tradeAmountFiat = createCopyOnClickLabel("trade-overview-value");
         currency = createText("trade-overview-currency");
         HBox fiatText = new HBox(5, tradeAmountFiat, currency);
         fiatText.setAlignment(Pos.BASELINE_LEFT);
@@ -101,7 +102,7 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         rowIndex++;
         buySellRole = createText("trade-overview-value");
         gridPane.add(buySellRole, 0, rowIndex);
-        tradeAmountBtc = createText("trade-overview-value");
+        tradeAmountBtc = createCopyOnClickLabel("trade-overview-value");
         btcLabel = createText("trade-overview-currency");
         HBox btcText = new HBox(5, tradeAmountBtc, btcLabel);
         btcText.setAlignment(Pos.BASELINE_LEFT);
@@ -130,7 +131,7 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         rowIndex++;
         tradeIdLabel = createLabel("trade-overview-currency");
         gridPane.add(tradeIdLabel, 0, rowIndex);
-        tradeId = createText("trade-overview-section");
+        tradeId = createCopyOnClickLabel("trade-overview-section");
         GridPane.setColumnSpan(tradeId, 2);
         gridPane.add(tradeId, 1, rowIndex);
         rowIndex++;
@@ -264,6 +265,12 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
 
     private Text createText(String style) {
         Text text = new Text();
+        text.getStyleClass().add(style);
+        return text;
+    }
+
+    private CopyOnClickLabel createCopyOnClickLabel(String style) {
+        CopyOnClickLabel text = new CopyOnClickLabel("");
         text.getStyleClass().add(style);
         return text;
     }
