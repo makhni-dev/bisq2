@@ -22,6 +22,7 @@ import bisq.chat.bisqeasy.open_trades.BisqEasyOpenTradeChannel;
 import bisq.common.monetary.Coin;
 import bisq.common.monetary.Fiat;
 import bisq.common.monetary.Monetary;
+import bisq.common.monetary.PriceQuote;
 import bisq.common.network.AddressByTransportTypeMap;
 import bisq.common.util.StringUtils;
 import bisq.contract.bisq_easy.BisqEasyContract;
@@ -109,10 +110,8 @@ public class TradeDetailsController extends NavigationController
         String bitcoinPaymentAddress = trade.getBitcoinPaymentData().get();
         if (StringUtils.isNotEmpty(bitcoinPaymentAddress)) {
             model.getBitcoinPaymentAddress().set(bitcoinPaymentAddress);
-            model.setBitcoinPaymentAddressProvided(true);
         } else {
-            model.setBitcoinPaymentAddressProvided(false);
-            model.getBitcoinPaymentAddress().set(Res.get("bisqEasy.openTrades.tradeDetails.dataNotYetProvided"));
+            model.getBitcoinPaymentAddress().set("");
         }
 
         BisqEasyContract contract = trade.getContract();
@@ -144,28 +143,28 @@ public class TradeDetailsController extends NavigationController
         String paymentAccountData = trade.getPaymentAccountData().get();
         if (StringUtils.isNotEmpty(paymentAccountData)) {
             model.getPaymentAccountData().set(paymentAccountData);
-            model.setPaymentAccountDataProvided(true);
+        } else {
+            model.getPaymentAccountData().set("");
         }
 
         String myMakerTakerRole = BisqEasyTradeFormatter.getMakerTakerRole(trade);
         model.getMyMakerTakerRole().set(myMakerTakerRole);
         Direction direction = BisqEasyTradeFormatter.getDirectionObject(trade);
-        String buyerSellerRole = (direction == Direction.BUY) ? Res.get("bisqEasy.openTrades.tradeOverview.buyBtc") : Res.get("bisqEasy.openTrades.tradeOverview.sellBtc");
+        String buyerSellerRole = (direction == Direction.BUY) ? Res.get("bisqEasy.openTrades.tradeDetails.buyBtc") : Res.get("bisqEasy.openTrades.tradeDetails.sellBtc");
         model.getMySellBuyRole().set(buyerSellerRole);
 
         Optional<UserProfile> mediator = channel.getMediator();
         if (mediator.isPresent()) {
-            model.setMediatorProvided(true);
             model.getMediator().set(mediator.get().getUserName());
         } else {
-            model.setMediatorProvided(false);
-            model.getMediator().set(Res.get("bisqEasy.openTrades.tradeDetails.mediatorNotProvided"));
+            model.getMediator().set("");
         }
 
-        String priceSpecStr = getPriceSpec(contract);
-        String priceWithCurrency = PriceFormatter.formatWithCode(BisqEasyTradeUtils.getPriceQuote(trade), false);
-        String tradePriceWithPriceSpec = priceWithCurrency + " " + priceSpecStr;
-        model.getTradePrice().set(tradePriceWithPriceSpec);
+        PriceQuote priceQuote = BisqEasyTradeUtils.getPriceQuote(trade);
+        String codes = priceQuote.getMarket().getMarketCodes();
+        model.getPriceSpec().set(codes + " @ " + getPriceSpec(contract));
+        String price = PriceFormatter.format(BisqEasyTradeUtils.getPriceQuote(trade));
+        model.getTradePrice().set(price);
     }
 
     @Override

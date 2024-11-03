@@ -34,6 +34,7 @@ public class TradeDetailsModel extends TabModel {
     private final SimpleStringProperty bitcoinPaymentAddress = new SimpleStringProperty();
     private final SimpleStringProperty amountInBTC = new SimpleStringProperty();
     private final SimpleStringProperty tradePrice = new SimpleStringProperty();
+    private final SimpleStringProperty priceSpec = new SimpleStringProperty();
     private final SimpleStringProperty mySellBuyRole = new SimpleStringProperty();
     private final SimpleStringProperty myMakerTakerRole = new SimpleStringProperty();
     private final SimpleStringProperty offerTakenDateTime = new SimpleStringProperty();

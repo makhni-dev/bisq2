@@ -17,7 +17,6 @@
 
 package bisq.desktop.main.content.bisq_easy.open_trades.trade_details;
 
-import bisq.desktop.common.Layout;
 import bisq.desktop.common.utils.GridPaneUtil;
 import bisq.desktop.common.view.NavigationView;
 import bisq.desktop.components.containers.Spacer;
@@ -25,31 +24,27 @@ import bisq.desktop.components.controls.BisqIconButton;
 import bisq.desktop.components.controls.MaterialTextField;
 import bisq.desktop.overlay.OverlayModel;
 import bisq.i18n.Res;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, TradeDetailsController> {
 
-    private static final int ROW_HEIGHT = 40;
-    private static final int ROW_SPACING = 10;
-    private final Label headline, processHeadline, processDescription, myRoleHeadline, amountHeadline, paymentMethodHeadline;
-    private final Label tradePriceLabel, tradeIdLabel;
+    private final Label headline, processHeadline, processDescription, myRoleLabel, amountLabel, paymentMethodLabel;
+    private final Label tradePriceLabel, tradeIdLabel, peerUsernameLabel, dateLabel, mediatorLabel, peerNetworkAddressLabel;
     private final Text makerTakerRole, buySellRole, tradeAmountBtc, btcPaymentMethod, tradeAmountFiat, currency;
-    private final Text fiatPaymentMethod, btcLabel, tradePriceAmount, tradeId;
+    private final Text fiatPaymentMethod, btcLabel, tradePriceAmount, tradeId, priceSpec, peerUsername, tradeDate, mediator, peerNetworkAddress;
     private final Button closeButton;
-    //    private final DetailsTextRow peerUsername, tradeId, myRole;
-//    private final DetailsTextRow fiatPaymentMethod, peerNetworkAddress;
-//    private final DetailsTextRow bitcoinPaymentMethod, tradePrice, offerTakenDateTime;
-//    private final DetailsTextRow mediator;
-//    private final DetailsRow tradeAmountFiat, tradeAmountBTC, paymentAccountData, bitcoinPaymentAddress;
     MaterialTextField btcPaymentAddress, paymentAccountData;
-    VBox allInfoContainer;
 
     public TradeDetailsView(TradeDetailsModel model, TradeDetailsController controller) {
         super(new VBox(), model, controller);
@@ -64,7 +59,8 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         root.getChildren().add(closeButtonRow);
 
         Region emptySpace = new Region();
-        emptySpace.setPrefHeight(30);
+        emptySpace.setMinHeight(30);
+        emptySpace.setMaxHeight(30);
         headline = createLabel("trade-overview-headline");
         VBox headlineBox = new VBox(5, emptySpace, headline);
         headlineBox.setAlignment(Pos.CENTER);
@@ -72,7 +68,6 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         headlineBox.getChildren().add(line1);
         root.getChildren().add(headlineBox);
 
-        // overview
         int numColumns = 3;
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
@@ -81,18 +76,21 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         GridPaneUtil.setGridPaneMultiColumnsConstraints(gridPane, numColumns);
 
         int rowIndex = 0;
-        myRoleHeadline = createLabel("trade-overview-text");
-        gridPane.add(myRoleHeadline, 0, rowIndex);
-        amountHeadline = createLabel("trade-overview-text");
-        gridPane.add(amountHeadline, 1, rowIndex);
-        paymentMethodHeadline = createLabel("trade-overview-text");
-        gridPane.add(paymentMethodHeadline, 2, rowIndex);
+        Insets topInset = new Insets(0,0,-14,0);
+        myRoleLabel = createLabel("trade-overview-text");
+        GridPane.setMargin(myRoleLabel, topInset);
+        gridPane.add(myRoleLabel, 0, rowIndex);
+        amountLabel = createLabel("trade-overview-text");
+        GridPane.setMargin(amountLabel, topInset);
+        gridPane.add(amountLabel, 1, rowIndex);
+        paymentMethodLabel = createLabel("trade-overview-text");
+        GridPane.setMargin(paymentMethodLabel, topInset);
+        gridPane.add(paymentMethodLabel, 2, rowIndex);
 
         rowIndex++;
         makerTakerRole = createText("trade-overview-value");
         gridPane.add(makerTakerRole, 0, rowIndex);
         tradeAmountFiat = createText("trade-overview-value");
-        HBox.setMargin(tradeAmountFiat, new Insets(0.5, 0, 0, 0));
         currency = createText("trade-overview-currency");
         HBox fiatText = new HBox(5, tradeAmountFiat, currency);
         fiatText.setAlignment(Pos.BASELINE_LEFT);
@@ -122,18 +120,43 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         gridPane.add(line3, 0, rowIndex);
 
         rowIndex++;
-        tradePriceLabel = createLabel("trade-overview-text");
-//        gridPane.add(tradePriceLabel, 0, rowIndex);
-        // change style
+        tradePriceLabel = createLabel("trade-overview-currency");
+        gridPane.add(tradePriceLabel, 0, rowIndex);
         tradePriceAmount = createText("trade-overview-section");
-//        gridPane.add(tradePriceAmount, 1, rowIndex, 2, 1);
+        priceSpec = createText("trade-overview-currency");
+        HBox tradePriceBox = new HBox(5, tradePriceAmount, priceSpec);
+        GridPane.setColumnSpan(tradePriceBox, 2);
+        gridPane.add(tradePriceBox, 1, rowIndex);
         rowIndex++;
-        tradeIdLabel = createLabel("trade-overview-text");
-//        gridPane.add(tradeIdLabel, 0, rowIndex);
-        // change style
+        tradeIdLabel = createLabel("trade-overview-currency");
+        gridPane.add(tradeIdLabel, 0, rowIndex);
         tradeId = createText("trade-overview-section");
-//        gridPane.add(tradeId, 1, rowIndex, 2, 1);
-
+        GridPane.setColumnSpan(tradeId, 2);
+        gridPane.add(tradeId, 1, rowIndex);
+        rowIndex++;
+        dateLabel = createLabel("trade-overview-currency");
+        gridPane.add(dateLabel, 0, rowIndex);
+        tradeDate = createText("trade-overview-section");
+        GridPane.setColumnSpan(tradeDate, 2);
+        gridPane.add(tradeDate, 1, rowIndex);
+        rowIndex++;
+        peerUsernameLabel = createLabel("trade-overview-currency");
+        gridPane.add(peerUsernameLabel, 0, rowIndex);
+        peerUsername = createText("trade-overview-section");
+        GridPane.setColumnSpan(peerUsername, 2);
+        gridPane.add(peerUsername, 1, rowIndex);
+        rowIndex++;
+        peerNetworkAddressLabel = createLabel("trade-overview-currency");
+        gridPane.add(peerNetworkAddressLabel, 0, rowIndex);
+        peerNetworkAddress = createText("trade-overview-section");
+        GridPane.setColumnSpan(peerNetworkAddress, 2);
+        gridPane.add(peerNetworkAddress, 1, rowIndex);
+        rowIndex++;
+        mediatorLabel = createLabel("trade-overview-currency");
+        gridPane.add(mediatorLabel, 0, rowIndex);
+        mediator = createText("trade-overview-section");
+        GridPane.setColumnSpan(mediator, 2);
+        gridPane.add(mediator, 1, rowIndex);
 
         // process
         rowIndex++;
@@ -155,25 +178,18 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         GridPane.setColumnSpan(line2, numColumns);
         gridPane.add(line2, 0, rowIndex);
         rowIndex++;
-        btcPaymentAddress = new MaterialTextField(Res.get("bisqEasy.openTrades.tradeOverview.btcPaymentAddress"));
+        btcPaymentAddress = new MaterialTextField(Res.get("bisqEasy.openTrades.tradeDetails.btcPaymentAddress"));
         btcPaymentAddress.setEditable(false);
         btcPaymentAddress.showCopyIcon();
         GridPane.setColumnSpan(btcPaymentAddress, numColumns);
         gridPane.add(btcPaymentAddress, 0, rowIndex);
         rowIndex++;
-        paymentAccountData = new MaterialTextField(Res.get("bisqEasy.openTrades.tradeOverview.paymentAccountData"));
+        paymentAccountData = new MaterialTextField(Res.get("bisqEasy.openTrades.tradeDetails.paymentAccountData"));
         paymentAccountData.setEditable(false);
         paymentAccountData.showCopyIcon();
         GridPane.setColumnSpan(paymentAccountData, numColumns);
         gridPane.add(paymentAccountData, 0, rowIndex);
 
-//        ColumnConstraints column1 = new ColumnConstraints();
-//        column1.setPercentWidth(25);
-//        ColumnConstraints column2 = new ColumnConstraints();
-//        column2.setPercentWidth(30);
-//        ColumnConstraints column3 = new ColumnConstraints();
-//        column2.setPercentWidth(45);
-//        gridPane.getColumnConstraints().addAll(column1, column2, column3);
         gridPane.setPadding(new Insets(10, 40, 10, 20));
         ScrollPane scrollPane = new ScrollPane(gridPane);
         scrollPane.setFitToWidth(true);
@@ -184,15 +200,19 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
 
     @Override
     protected void onViewAttached() {
-        headline.setText(Res.get("bisqEasy.openTrades.tradeOverview.headline"));
-        processHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.processSection"));
-        myRoleHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.myRole"));
-        amountHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.amount"));
-        paymentMethodHeadline.setText(Res.get("bisqEasy.openTrades.tradeOverview.paymentMethod"));
-        processDescription.setText(Res.get("bisqEasy.openTrades.tradeOverview.processDescription"));
+        headline.setText(Res.get("bisqEasy.openTrades.tradeDetails.headline"));
+        processHeadline.setText(Res.get("bisqEasy.openTrades.tradeDetails.processSection"));
+        myRoleLabel.setText(Res.get("bisqEasy.openTrades.tradeDetails.myRole"));
+        amountLabel.setText(Res.get("bisqEasy.openTrades.tradeDetails.amount"));
+        paymentMethodLabel.setText(Res.get("bisqEasy.openTrades.tradeDetails.paymentMethod"));
+        processDescription.setText(Res.get("bisqEasy.openTrades.tradeDetails.processDescription"));
         btcLabel.setText("BTC");
-        tradePriceLabel.setText(Res.get("bisqEasy.openTrades.tradeOverview.tradePrice"));
+        tradePriceLabel.setText(Res.get("bisqEasy.openTrades.tradeDetails.tradePrice"));
         tradeIdLabel.setText(Res.get("bisqEasy.openTrades.table.tradeId"));
+        peerUsernameLabel.setText(Res.get("bisqEasy.openTrades.tradeDetails.peerUsername"));
+        peerNetworkAddressLabel.setText(Res.get("bisqEasy.openTrades.tradeDetails.peerNetworkAddress"));
+        dateLabel.setText(Res.get("bisqEasy.openTrades.tradeDetails.offerTakenDate"));
+        mediatorLabel.setText(Res.get("bisqEasy.openTrades.tradeDetails.selectedMediator"));
 
         buySellRole.textProperty().bind(model.getMySellBuyRole());
         makerTakerRole.textProperty().bind(model.getMyMakerTakerRole());
@@ -204,29 +224,12 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         btcPaymentAddress.textProperty().bind(model.getBitcoinPaymentAddress());
         paymentAccountData.textProperty().bind(model.getPaymentAccountData());
         tradePriceAmount.textProperty().bind(model.getTradePrice());
+        priceSpec.textProperty().bind(model.getPriceSpec());
         tradeId.textProperty().bind(model.getTradeId());
-        //   allInfoContainer.prefHeightProperty().bind(root.heightProperty());
-        //   allInfoContainer.prefWidthProperty().bind(root.widthProperty());
-//        peerUsername.textField.textProperty().bind(model.getPeerUsername());
-//        tradeId.textField.textProperty().bind(model.getTradeId());
-//        tradeAmountFiat.description.textProperty().bind(model.getCurrencyDescription());
-//        tradeAmountFiat.textField.textProperty().bind(model.getAmountInFiat());
-//        bitcoinPaymentAddress.textField.textProperty().bind(model.getBitcoinPaymentAddress());
-//
-//        tradePrice.textField.textProperty().bind(model.getTradePrice());
-//        offerTakenDateTime.textField.textProperty().bind(model.getOfferTakenDateTime());
-//        tradeAmountBTC.textField.textProperty().bind(model.getAmountInBTC());
-//        fiatPaymentMethod.textField.textProperty().bind(model.getFiatPaymentMethod());
-//        bitcoinPaymentMethod.textField.textProperty().bind(model.getBitcoinPaymentMethod());
-//
-//        paymentAccountData.textField.textProperty().bind(model.getPaymentAccountData());
-//        myRole.textField.textProperty().bind(model.getMyRole());
-//        peerNetworkAddress.textField.textProperty().bind(model.getPeerNetworkAddress());
-//        mediator.textField.textProperty().bind(model.getMediator());
-//
-//        applyDarkTextColorIfNotProvided(bitcoinPaymentAddress.textField.getTextInputControl(), !model.isBitcoinPaymentAddressProvided());
-//        applyDarkTextColorIfNotProvided(paymentAccountData.textField.getTextInputControl(), !model.isPaymentAccountDataProvided());
-//        applyDarkTextColorIfNotProvided(mediator.textField, !model.isMediatorProvided());
+        peerUsername.textProperty().bind(model.getPeerUsername());
+        peerNetworkAddress.textProperty().bind(model.getPeerNetworkAddress());
+        tradeDate.textProperty().bind(model.getOfferTakenDateTime());
+        mediator.textProperty().bind(model.getMediator());
 
         closeButton.setOnAction(e -> controller.onClose());
     }
@@ -243,26 +246,12 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         btcPaymentAddress.textProperty().unbind();
         paymentAccountData.textProperty().unbind();
         tradePriceAmount.textProperty().unbind();
+        priceSpec.textProperty().unbind();
         tradeId.textProperty().unbind();
-        //   allInfoContainer.prefHeightProperty().unbind();
-        //   allInfoContainer.prefWidthProperty().unbind();
-
-        //     peerUsername.textField.textProperty().unbind();
-        //     tradeId.textField.textProperty().unbind();
-        //     tradeAmountFiat.description.textProperty().unbind();
-        //     tradeAmountFiat.textField.textProperty().unbind();
-        //     bitcoinPaymentAddress.textField.textProperty().unbind();
-
-        //     tradePrice.textField.textProperty().unbind();
-        //     offerTakenDateTime.textField.textProperty().unbind();
-        //     tradeAmountBTC.textField.textProperty().unbind();
-        //     fiatPaymentMethod.textField.textProperty().unbind();
-        //     bitcoinPaymentMethod.textField.textProperty().unbind();
-
-        //     paymentAccountData.textField.textProperty().unbind();
-        //     myRole.textField.textProperty().unbind();
-        //     peerNetworkAddress.textField.textProperty().unbind();
-        //     mediator.textField.textProperty().unbind();
+        peerUsername.textProperty().unbind();
+        peerNetworkAddress.textProperty().unbind();
+        tradeDate.textProperty().unbind();
+        mediator.textProperty().unbind();
 
         closeButton.setOnAction(null);
     }
@@ -279,7 +268,6 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         return text;
     }
 
-    // copied from TradeWizardReviewView
     private Region getLine() {
         Region line = new Region();
         line.setMinHeight(1);
@@ -287,81 +275,5 @@ public class TradeDetailsView extends NavigationView<VBox, TradeDetailsModel, Tr
         line.setStyle("-fx-background-color: -bisq-border-color-grey");
         line.setPadding(new Insets(9, 0, 8, 0));
         return line;
-    }
-
-    private VBox createSectionHeader(String headlineText) {
-        VBox section = new VBox(ROW_SPACING);
-        Label headline = new Label(headlineText);
-        headline.getStyleClass().add("bisq-text-headline-2");
-        Region separator = Layout.hLine();
-        separator.setStyle("-fx-background-color: green;");
-        separator.getStyleClass().add("green-h-line");
-        section.getChildren().addAll(headline, separator);
-        return section;
-    }
-
-    private TextArea createDescription(String text) {
-        int LEFT_COLUMN_WIDTH = 250;
-        TextArea area = new TextArea(text);
-        area.setEditable(false);
-        area.setMinWidth(LEFT_COLUMN_WIDTH);
-        area.setMaxWidth(LEFT_COLUMN_WIDTH);
-        area.setPrefHeight(ROW_HEIGHT);
-        area.setMinHeight(ROW_HEIGHT);
-        return area;
-    }
-
-    private void applyDarkTextColorIfNotProvided(TextInputControl textField, boolean dataNotProvided) {
-        String brightTextColor = "material-text-field-read-only";
-        String darkTextColor = "material-text-field-description-deselected";
-        if (dataNotProvided) {
-            textField.getStyleClass().remove(brightTextColor);
-            if (!textField.getStyleClass().contains(darkTextColor)) {
-                // Make the text less visible for the sake of clarity
-                textField.getStyleClass().add(darkTextColor);
-            }
-        } else {
-            textField.getStyleClass().remove(darkTextColor);
-            if (!textField.getStyleClass().contains(brightTextColor)) {
-                textField.getStyleClass().add(brightTextColor);
-            }
-        }
-    }
-
-    private class DetailsRow extends HBox {
-        TextArea description;
-        MaterialTextField textField;
-
-        public DetailsRow(String description) {
-            super();
-            this.setSpacing(20);
-            this.description = createDescription(description);
-
-            textField = new MaterialTextField();
-            textField.setEditable(false);
-            textField.showCopyIcon();
-            HBox.setHgrow(textField, Priority.ALWAYS);
-            this.getChildren().addAll(this.description, textField);
-        }
-    }
-
-    private class DetailsTextRow extends HBox {
-        TextArea description;
-        TextArea textField;
-
-        public DetailsTextRow(String description) {
-            super();
-            this.setSpacing(20);
-            this.description = createDescription(description);
-
-            textField = new TextArea();
-            textField.setPrefHeight(ROW_HEIGHT);
-            textField.setMinHeight(ROW_HEIGHT);
-            textField.setEditable(false);
-            // ensure usage of the same font size as material text field to align text
-            textField.getStyleClass().add("material-text-field-description-big");
-            HBox.setHgrow(textField, Priority.ALWAYS);
-            this.getChildren().addAll(this.description, textField);
-        }
     }
 }

@@ -1319,5 +1319,6 @@
 
 .trade-overview-top-row {
     -fx-background-color: -bisq-dark-grey-20;
-    -fx-pref-height: 50;
+    -fx-min-height: 50;
+    -fx-max-height: 50;
 }
