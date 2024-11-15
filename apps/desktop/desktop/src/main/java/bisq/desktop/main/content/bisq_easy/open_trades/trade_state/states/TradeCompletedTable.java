@@ -64,17 +64,18 @@ public class TradeCompletedTable extends VBox {
         bodyGridPane.getColumnConstraints().add(valueCol);
 
         copyTxIdButton = new BisqMenuItem("copy-grey", "copy-white");
-        copyTxIdButton.useIconOnly();
+//        copyTxIdButton.useIconOnly();
         copyTxIdButton.setTooltip(Res.get("bisqEasy.tradeCompleted.body.copy.txId.tooltip"));
+        copyTxIdButton.createClickTooltip("Copied to clipboard");
 
         copyTxExplorerLinkButton = new BisqMenuItem("link-grey", "link-white");
-        copyTxExplorerLinkButton.useIconOnly();
+//        copyTxExplorerLinkButton.useIconOnly();
         copyTxExplorerLinkButton.setTooltip(Res.get("bisqEasy.tradeCompleted.body.copy.explorerLink.tooltip"));
         copyTxExplorerLinkButton.setVisible(false);
         copyTxExplorerLinkButton.setManaged(false);
 
         openTxExplorerButton = new BisqMenuItem("open-link-grey","open-link-white");
-        openTxExplorerButton.useIconOnly();
+//        openTxExplorerButton.useIconOnly();
         openTxExplorerButton.setTooltip(Res.get("bisqEasy.tradeCompleted.body.txId.tooltip"));
         openTxExplorerButton.setVisible(false);
         openTxExplorerButton.setManaged(false);

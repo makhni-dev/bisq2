@@ -18,15 +18,17 @@
 package bisq.desktop.components.controls;
 
 import bisq.desktop.common.utils.ImageUtil;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 public class BisqMenuItem extends Button {
     public static final String ICON_CSS_STYLE = "menu-item-icon";
-
+    private boolean mouseIsInGraphic = false;
     private ImageView defaultIcon, activeIcon, buttonIcon;
 
     public BisqMenuItem(String defaultIconId, String activeIconId, String text) {
@@ -75,6 +77,24 @@ public class BisqMenuItem extends Button {
         }
     }
 
+    public void createClickTooltip(String clickMessage) {
+        setOnMouseClicked(e -> {
+            updateIcon(defaultIcon);
+            BisqTooltip tooltip = new BisqTooltip(clickMessage);
+            double mouseX = e.getScreenX();
+            double mouseY = e.getScreenY();
+            tooltip.show(this, mouseX + 5, mouseY + 5);
+            PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
+            delay.setOnFinished(d -> {
+                if (mouseIsInGraphic) {
+                    updateIcon(activeIcon);
+                }
+                tooltip.hide();
+            });
+            delay.play();
+        });
+    }
+
     public void applyIconColorAdjustment(ColorAdjust colorAdjust) {
         if (colorAdjust != null) {
             buttonIcon.setEffect(colorAdjust);
@@ -82,9 +102,29 @@ public class BisqMenuItem extends Button {
     }
 
     private void attachListeners() {
-        setOnMouseEntered(e -> updateIcon(activeIcon));
-        setOnMouseExited(e -> updateIcon(defaultIcon));
-        setOnMouseClicked(e -> updateIcon(defaultIcon));
+        setOnMouseMoved(e -> {
+            ImageView iconView = (ImageView) this.getGraphic();
+            double graphicX = iconView.getLayoutX();
+            double graphicY = iconView.getLayoutY();
+            double graphicWidth = iconView.getBoundsInParent().getWidth();
+            double graphicHeight = iconView.getBoundsInParent().getHeight();
+            double mouseX = e.getX();
+            double mouseY = e.getY();
+            // Check if the mouse is inside the bounds of the graphic (image)
+            boolean isMouseOverGraphic = mouseX >= graphicX && mouseX <= graphicX + graphicWidth &&
+                    mouseY >= graphicY && mouseY <= graphicY + graphicHeight;
+
+            // If the mouse is over the graphic area, show the tooltip
+            if (isMouseOverGraphic) {
+                updateIcon(activeIcon);
+                mouseIsInGraphic = true;
+            }
+        });
+        setOnMouseExited(e -> {
+            mouseIsInGraphic = false;
+            updateIcon(defaultIcon);
+        });
+        createClickTooltip("Copied");
     }
 
     private void updateIcon(ImageView newIcon) {
